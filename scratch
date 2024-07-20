@@ -31,3 +31,31 @@ from engine.board import Board
 edeck = EvolutionDeck.from_csv('/home/steganopus/Documents/TAoS/misc/20240719/survival/asset/deck/evolution/base.txt')
 
 board = Board(edeck, None)
+
+board.cast_animal(board.evolution_deck.draw(), 0)
+board.cast_trait(board.evolution_deck.draw(), 'main', 0)
+board.cast_trait(board.evolution_deck.draw(), 'short', 0)
+board.cast_trait(board.evolution_deck.draw(), 'main', 0)
+board.cast_trait(board.evolution_deck.draw(), 'short', 0)
+board.cast_trait(board.evolution_deck.draw(), 'main', 0)
+board.cast_trait(board.evolution_deck.draw(), 'short', 0)
+
+board.cast_animal(board.evolution_deck.draw(), 0)
+
+board.cast_trait(board.evolution_deck.draw(), 'main', 1)
+board.cast_trait(board.evolution_deck.draw(), 'short', 1)
+board.cast_trait(board.evolution_deck.draw(), 'main', 1)
+board.cast_trait(board.evolution_deck.draw(), 'short', 1)
+board.cast_trait(board.evolution_deck.draw(), 'main', 1)
+board.cast_trait(board.evolution_deck.draw(), 'short', 1)
+
+board.animal_dict[1].render(board.trait_dict).print()
+
+board.discard_trait(9)
+board.discard_trait(8)
+board.discard_trait(7)
+
+board.render_row([board.animal_dict[0], board.animal_dict[1]])
+
+
+board.discard_animal(1)
