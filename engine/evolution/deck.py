@@ -1,3 +1,4 @@
+import pandas as pd
 import random
 
 from engine.evolution.card import EvolutionCard
@@ -10,6 +11,23 @@ class EvolutionDeck:
         self.l = 0
         self.card_tuples = list()
         self.cards = list()
+    
+    @staticmethod
+    def from_csv(csv_file):
+        ed = EvolutionDeck()
+        deck_df = pd.read_csv(csv_file)
+        assert 'main_trait' in deck_df.columns
+        assert 'short_trait' in deck_df.columns
+        assert 'quantity' in deck_df.columns
+        assert 'front_txt' in deck_df.columns
+        assert 'back_txt' in deck_df.columns
+        for _, row in deck_df.iterrows():
+            for _ in range(row.quantity):
+                ed.add_card_spec(row.main, row.short, row.back_txt, row.front_txt)
+        ed.create_cards()
+        ed.shuffle()
+        return ed
+
 
     def add_card_spec(self, main, short, back_txt, front_txt):
         back = Render.from_txt(back_txt)
@@ -22,6 +40,8 @@ class EvolutionDeck:
         for main, short, back, front in self.card_tuples:
             self.cards.append(EvolutionCard(main, short, back, front, self.h, self.l))
 
-
     def shuffle(self):
         random.shuffle(self.cards)
+
+    def draw(self):
+        return self.cards.pop(-1)

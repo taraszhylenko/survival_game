@@ -6,8 +6,9 @@ from engine.evolution.playable.animal import Animal
 
 edeck = EvolutionDeck()
 edeck.add_card_spec('swimming', 'flying', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
-edeck.add_card_spec('swimming', 'flying', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
-edeck.add_card_spec('swimming', 'flying', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
+edeck.add_card_spec('swimming', 'poisonous', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
+edeck.add_card_spec('swimming', 'tail_loss', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
+edeck.create_cards()
 
 muh_moose = Animal(card1, 0, 0)
 t0 = Trait(card2, 'main', 0)
@@ -18,3 +19,12 @@ muh_moose.render({0: t0, 1: t1}).print()
 muh_moose.remove_solo_trait(0)
 muh_moose.render({0: t0, 1: t1}).print()
 
+
+
+from engine.render import Render
+from engine.evolution.card import EvolutionCard
+from engine.evolution.deck import EvolutionDeck
+from engine.evolution.playable.trait import Trait
+from engine.evolution.playable.animal import Animal
+
+edeck = EvolutionDeck.from_csv('/home/steganopus/Documents/TAoS/misc/20240719/survival/asset/deck/evolution/base.txt')
