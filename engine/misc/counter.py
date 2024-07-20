@@ -7,11 +7,11 @@ class Counter:
 
     def increment(self):
         self.value += 1
-        assert 0 <= self.value < 10
+        assert 0 <= self.value < 100
 
     def decrement(self):
         self.value -= 1
-        assert 0 <= self.value < 10
+        assert 0 <= self.value < 100
 
     def render(self):
         return Render.from_string(f'{self.label}: {self.value}')
