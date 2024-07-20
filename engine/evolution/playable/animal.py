@@ -1,5 +1,5 @@
 from engine.evolution.card  import EvolutionCard
-from engine.evolution.trait import Trait
+from engine.evolution.playable.trait import Trait
 
 class Animal:
     def __init__(self, card, idx, slot_idx):
