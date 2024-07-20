@@ -37,12 +37,12 @@ class Board:
         trait_idx = self.trait_ctr 
         trait = Trait(card, side, trait_idx)
         self.trait_dict[trait_idx] = trait
-        self.animal_dict[animal_idx].add_trait(trait_idx)
+        self.animal_dict[animal_idx].add_trait(trait_idx, self.trait_dict)
         self.trait_ctr += 1
 
     def discard_trait(self, trait_idx):
         for animal in self.animal_dict.values():
-            animal.remove_trait(trait_idx)
+            animal.remove_trait(trait_idx, self.trait_dict)
         self.evolution_discard.add_card(self.trait_dict[trait_idx].card)
         del self.trait_dict[trait_idx]
 
