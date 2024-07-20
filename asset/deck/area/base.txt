@@ -1,0 +1,11 @@
+environment_1,effect1,fruit1,shelter1,environment_2,effect2,fruit2,shelter2,quantity
+mangrove_forest,,2,1,,,,,2
+glaciers,without_traits,1,0,tundra,,1,0,2
+lakes,swimming,2,0,reed_beds,,2,0,2
+savannahs,high_body_weight,2,0,deserts,,1,0,2
+swamps,dies->fruit(max 4),1,0,,,,,2
+jungles,,3,1,,,,,2
+taiga,,3,0,,,,,2
+caves,nocturnal,2,0,rocks,,1,1,2
+steppes,,2,0,,,,,2
+shrublands,,1,1,,,,,2
