@@ -23,7 +23,7 @@ class EvolutionDeck:
         assert 'back_txt' in deck_df.columns
         for _, row in deck_df.iterrows():
             for _ in range(row.quantity):
-                ed.add_card_spec(row.main, row.short, row.back_txt, row.front_txt)
+                ed.add_card_spec(row.main_trait, row.short_trait, row.back_txt, row.front_txt)
         ed.create_cards()
         ed.shuffle()
         return ed
