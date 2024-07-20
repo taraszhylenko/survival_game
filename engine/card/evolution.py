@@ -18,19 +18,28 @@ class EvolutionCard:
         assert self.l > self.back.l + 4 
         assert self.l > self.front.l + 4 
         assert self.h > self.back.h + 4 
-        assert self.h > self.front.h + 8 
+        assert self.h > self.front.h + 6 
 
     def render_back(self):
         return self.back.balloon_to(self.h - 2, self.l - 2).add_border(False)
+
+    def render_front(self, main_tag, short_tag):
+        main  = self.render_main(main_tag)
+        mid   = self.render_mid()
+        short = self.render_short(short_tag)
+        return main.stack_above(mid, True).stack_above(short, True)
 
     def render_main(self, tag):
         assert isinstance(tag, str)
         assert len(tag) <= 4
         mid_pad = self.l - len(self.main) - 4 - len(tag)
-        return Render.from_string('_' + self.main + '_' * mid_pad + tag + '_').add_border()  
+        return Render.from_string('_' + self.main + '_' * mid_pad + tag + '_').add_border(True) 
 
     def render_mid(self):
-        pass
+        return self.front.balloon_to(self.h - 4, self.l - 2).add_border(False)
 
-    def render_short(self):
-        pass
+    def render_short(self, tag):
+        assert isinstance(tag, str)
+        assert len(tag) <= 4
+        mid_pad = self.l - len(self.short) - 4 - len(tag)
+        return Render.from_string('_' + self.short + '_' * mid_pad + tag + '_').add_border(True) 
