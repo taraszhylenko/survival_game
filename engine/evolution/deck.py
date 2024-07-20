@@ -4,16 +4,9 @@ import random
 from engine.evolution.card import EvolutionCard
 from engine.misc.counter import Counter
 from engine.render import Render
+from engine.deck   import Deck
 
-class EvolutionDeck:
-    def __init__(self):
-        self.cards = list()
-        self.h = 3
-        self.l = 3
-        self.card_tuples = list()
-        self.cards = list()
-        self.card_counter = Counter('cards_left', 0)
-
+class EvolutionDeck(Deck):
     @staticmethod
     def from_csv(csv_file):
         ed = EvolutionDeck()
@@ -42,24 +35,10 @@ class EvolutionDeck:
         self.l = max([self.l, back.l + 5, len(short) + 10, len(main) + 10, front.l + 5, 12])
         self.h = max([self.h, back.h + 5, front.h + 7])
 
-    def add_card(self, card):
-        self.cards.append(card)
-        self.card_counter.increment()
-
     def create_cards(self):
         for main, short, back, front, reqs in self.card_tuples:
             new_card = EvolutionCard(main, short, back, front, self.h, self.l, reqs)
             self.add_card(new_card)
-
-    def shuffle(self):
-        random.shuffle(self.cards)
-
-    def draw(self):
-        self.card_counter.decrement()
-        return self.cards.pop(-1)
-
-    def render(self):
-        return self.card_counter.render().balloon_to(self.h - 2, self.l - 2).add_border(False)
 
     def render_last_card(self):
         if len(self.cards) > 0:
