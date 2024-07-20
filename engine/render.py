@@ -12,21 +12,44 @@ class Render:
             for row in f:
                 rows.append([ord(ch) for ch in row[:-1]])
         return Render(np.array(rows))
-   
+  
     @staticmethod
-    def blank(height, length):
-        return Render(np.ones((height, length), dtype=int) * ord(' '))
+    def from_string(string_):
+        arr = []
+        for char in string_: 
+            arr.append(ord(char))
+        return Render(np.array([arr]))
 
-    def pad(self, direction, char):
+    @staticmethod
+    def blank(h, l):
+        return Render(np.ones((h, l), dtype=int) * ord(' '))
+
+    def copy(self):
+        return Render(self.arr.copy())
+
+    def pad(self, direction, char, tight):
         num = ord(char)
+        blank_num = ord(' ')
         if direction == 'up':
-            return Render(np.concatenate([np.array([[num] * self.l]), self.arr], axis=0))
+            bot = self.arr[1:] if tight else self.arr
+            top = np.array([[num if el == blank_num else el for el in self.arr[0]]] if tight \
+                    else [[num] * self.l])
+            return Render(np.concatenate([top, bot], axis=0))
         elif direction == 'right':
-            return Render(np.concatenate([self.arr, np.array([[num]] * self.h)], axis=1))
+            left  = self.arr[:, :-1] if tight else self.arr
+            right = np.array([[num if el == blank_num else el] for el in self.arr[:, -1]] if tight \
+                      else [[num]] * self.h)
+            return Render(np.concatenate([left, right], axis=1))
         elif direction == 'down':
-            return Render(np.concatenate([self.arr, np.array([[num] * self.l])], axis=0))
+            top = self.arr[:-1] if tight else self.arr
+            bot = np.array([[num if el == blank_num else el for el in self.arr[-1]]] if tight \
+                    else [[num] * self.l])
+            return Render(np.concatenate([top, bot], axis=0))
         elif direction == 'left':
-            return Render(np.concatenate([np.array([[num]] * self.h), self.arr], axis=1))
+            right  = self.arr[:, 1:] if tight else self.arr
+            left = np.array([[num if el == blank_num else el] for el in self.arr[:, 0]] if tight \
+                        else [[num]] * self.h)
+            return Render(np.concatenate([left, right], axis=1))
         else:
             raise AssertionError(f'{direction=}, should be one of [up, right, down, left]')
 
@@ -46,6 +69,25 @@ class Render:
         new_arr = self.arr.copy()
         new_arr[i:i+other.h, j:j+other.l] = other.arr
         return Render(new_arr)
+
+    def add_border(self, tight_down):
+        return self.pad('down',  '_', tight_down  \
+                  ).pad('left',  '|', False \
+                  ).pad('right', '|', False \
+                  ).pad('up',    '_', False)
+
+    def balloon_to(self, h, l):
+        target = self.copy()
+        assert target.h <= h and target.l <= l
+        dirs = ['up', 'right', 'down', 'left']
+        idx = 0
+        while h > target.h or l > target.l:
+            if dirs[idx] in {'up', 'down'} and h > target.h:
+                target = target.pad(dirs[idx], ' ', False)
+            elif dirs[idx] in {'left', 'right'} and l > target.l:
+                target = target.pad(dirs[idx], ' ', False)
+            idx = (idx + 1) % 4
+        return target
 
     def print(self):
         for i in range(self.h):
