@@ -1,16 +1,20 @@
 from engine.render import Render
 from engine.evolution.card import EvolutionCard
-from engine.evolution.trait import Trait
-from engine.evolution.animal import Animal
+from engine.evolution.deck import EvolutionDeck
+from engine.evolution.playable.trait import Trait
+from engine.evolution.playable.animal import Animal
 
-card1 = EvolutionCard('kuk', 'kek', Render.from_txt('asset/card/evolution/back/moose1.txt'), Render.blank(1, 1), 10, 13)
-card2 = EvolutionCard('kuk', 'kek', Render.from_txt('asset/card/evolution/back/moose1.txt'), Render.blank(1, 1), 10, 13)
-card3 = EvolutionCard('kuk', 'kek', Render.from_txt('asset/card/evolution/back/moose1.txt'), Render.blank(1, 1), 10, 13)
+edeck = EvolutionDeck()
+edeck.add_card_spec('swimming', 'flying', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
+edeck.add_card_spec('swimming', 'flying', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
+edeck.add_card_spec('swimming', 'flying', 'asset/card/evolution/back/moose1.txt', 'asset/card/evolution/back/bird1.txt')
 
 muh_moose = Animal(card1, 0, 0)
 t0 = Trait(card2, 'main', 0)
 t1 = Trait(card2, 'short', 1)
 muh_moose.add_solo_trait(0)
 muh_moose.add_solo_trait(1)
+muh_moose.render({0: t0, 1: t1}).print()
+muh_moose.remove_solo_trait(0)
 muh_moose.render({0: t0, 1: t1}).print()
 
