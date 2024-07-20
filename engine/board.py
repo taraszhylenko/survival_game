@@ -67,3 +67,13 @@ class Board:
                                               self.die.render()]
                                               )
         return Render.merge_into_row([animals, divider2, utilities])
+
+
+    def reveal_area(self):
+        pass
+
+    def discard_area(self):
+        pass
+
+    def populate_areas(self):
+        pass
