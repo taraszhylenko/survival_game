@@ -33,7 +33,7 @@ class EvolutionDeck:
         back = Render.from_txt(back_txt)
         front = Render.from_txt(front_txt)
         self.card_tuples.append((main, short, back, front))
-        self.l = max([self.l, back.l + 5, len(short) + 10, len(main) + 10, front.l + 5])
+        self.l = max([self.l, back.l + 5, len(short) + 10, len(main) + 10, front.l + 5, 12])
         self.h = max([self.h, back.h + 5, front.h + 7])
 
     def add_card(self, card):
@@ -50,7 +50,7 @@ class EvolutionDeck:
         return self.cards.pop(-1)
 
     def render(self):
-        return Render.blank(self.h - 2, self.l - 2).add_border(False)
+        return Render.from_string(f'New Cards {len(self.cards)}').balloon_to(self.h - 2, self.l - 2).add_border(False)
 
     def render_last_card(self):
         if len(self.cards) > 0:

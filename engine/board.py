@@ -57,10 +57,13 @@ class Board:
 
     def render(self):
         row0 = Render.merge_into_row([Render.blank(1, 1)] + [self.animal_dict[i].render(self.trait_dict) for i in self.animal_rows[0]])
+        divider = Render.merge_into_column([Render.from_string('^^^ PLAYER 1 ^^^'),
+                                            Render.from_string('vvv PLAYER 2 VVV')])
         row1 = Render.merge_into_row([Render.blank(1, 1)] + [self.animal_dict[i].render(self.trait_dict) for i in self.animal_rows[1]])
-        animals = Render.merge_into_column([row0, row1])
+        animals = Render.merge_into_column([row0, divider, row1])
+        divider2 = Render.from_string("<<< ANIMALS | DECKS >>>")
         utilities = Render.merge_into_column([self.evolution_deck.render(),
                                               self.evolution_discard.render_last_card(),
                                               self.die.render()]
                                               )
-        return Render.merge_into_row([animals, utilities])
+        return Render.merge_into_row([animals, divider2, utilities])
