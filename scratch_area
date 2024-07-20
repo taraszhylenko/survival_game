@@ -1,0 +1,19 @@
+from engine.area.card import SubArea, AreaCard
+from engine.render import Render
+
+s1 = SubArea('glaciers', 'without_traits', 1, 0, Render.from_string('*'), 		Render.from_string('#'), 10, 20, 0)
+s2 = SubArea('tundra',   '', 1, 0, 	         Render.from_string('*'), 		Render.from_string('#'), 10, 20, 1)
+
+s1.render_back().print()
+s1.render_front().print()
+
+s1.add_green()
+s1.add_green()
+
+s1.render_front().print()
+
+
+c1 = AreaCard()
+c1.add_subarea(s1)
+c1.add_subarea(s2)
+c1.render_front().print()

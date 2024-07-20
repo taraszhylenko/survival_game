@@ -33,9 +33,9 @@ class EvolutionCard:
 
     def render_front(self, main_tag, short_tag):
         main  = self.render_main(main_tag)
-        mid   = self.render_mid()
+        pic   = self.render_pic()
         short = self.render_short(short_tag)
-        return main.stack_above(mid, True).stack_above(short, True)
+        return main.stack_above(pic, True).stack_above(short, True)
 
     def render_main(self, tag):
         assert isinstance(tag, str)
@@ -43,7 +43,7 @@ class EvolutionCard:
         mid_pad = self.l - len(self.main) - 4 - len(tag)
         return Render.from_string('_' + self.main + '_' * mid_pad + tag + '_').add_border(True) 
 
-    def render_mid(self):
+    def render_pic(self):
         return self.front.balloon_to(self.h - 4, self.l - 2).add_border(False)
 
     def render_short(self, tag):
