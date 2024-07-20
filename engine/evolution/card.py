@@ -1,13 +1,14 @@
 from engine.render import Render
 
 class EvolutionCard:
-    def __init__(self, main, short, back, front, h, l):
+    def __init__(self, main, short, back, front, h, l, reqs):
         self.main  = main
         self.short = short
         self.back  = back
         self.front = front
         self.h = h
         self.l = l
+        self.reqs = reqs
         self.checks()
    
     def checks(self):
@@ -19,6 +20,7 @@ class EvolutionCard:
         assert self.l > self.front.l + 4 
         assert self.h > self.back.h + 4 
         assert self.h > self.front.h + 6 
+        assert isinstance(self.reqs,  dict)
 
     def render_back(self, tag):
         assert isinstance(tag, str)
@@ -49,3 +51,7 @@ class EvolutionCard:
         assert len(tag) <= 4
         mid_pad = self.l - len(self.short) - 4 - len(tag)
         return Render.from_string('_' + self.short + '_' * mid_pad + tag + '_').add_border(True) 
+
+    def req(self, side):
+        assert side in {'main', 'short'}
+        return self.reqs[side]
