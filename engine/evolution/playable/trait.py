@@ -8,6 +8,9 @@ class Trait:
         self.side = side
         self.idx  = idx
 
+    def req(self):
+        return self.card.req(self.side)
+
     def render(self):
         if self.side == 'main':
             return self.card.render_main(f't{self.idx}')
