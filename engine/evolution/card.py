@@ -31,10 +31,10 @@ class EvolutionCard:
         inserted = bordered.insert_from(render_tag, bordered.h-1, bordered.l - 2 - len(tag))
         return inserted 
 
-    def render_front(self, main_tag, short_tag):
-        main  = self.render_main(main_tag)
+    def render_front(self):
+        main  = self.render_main('')
         pic   = self.render_pic()
-        short = self.render_short(short_tag)
+        short = self.render_short('')
         return main.stack_above(pic, True).stack_above(short, True)
 
     def render_main(self, tag):

@@ -42,6 +42,6 @@ class EvolutionDeck(Deck):
 
     def render_last_card(self):
         if len(self.cards) > 0:
-            return self.cards[-1].render_front('', '')
+            return self.cards[-1].render_front()
         else:
             return self.render()

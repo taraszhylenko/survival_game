@@ -26,3 +26,9 @@ class Deck:
 
     def render(self):
         return self.card_counter.render().balloon_to(self.h - 2, self.l - 2).add_border(False)
+
+    def render_last_card(self):
+        if len(self.cards) > 0:
+            return self.cards[-1].render_front()
+        else:
+            return self.render()
