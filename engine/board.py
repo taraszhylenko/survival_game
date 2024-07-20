@@ -4,9 +4,9 @@ from engine.misc.die import Die
 
 class Board:
     def __init__(self, evolution_deck, area_deck):
-        self.evolution_deck = e_deck
+        self.evolution_deck = evolution_deck
         self.evolution_discard = list() 
-        self.area_deck = a_deck
+        self.area_deck = area_deck
         self.die = Die()
         self.animal_dict = dict()
         self.animal_ctr  = 0

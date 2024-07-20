@@ -26,5 +26,8 @@ from engine.evolution.card import EvolutionCard
 from engine.evolution.deck import EvolutionDeck
 from engine.evolution.playable.trait import Trait
 from engine.evolution.playable.animal import Animal
+from engine.board import Board
 
 edeck = EvolutionDeck.from_csv('/home/steganopus/Documents/TAoS/misc/20240719/survival/asset/deck/evolution/base.txt')
+
+board = Board(edeck, None)
