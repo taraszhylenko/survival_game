@@ -12,7 +12,7 @@ class Animal:
         self.traits.append(trait_idx)
 
     def remove_trait(self, trait_idx):
-        self.traits.remove(trait_idx)
+        self.traits = list(filter(lambda x: x != trait_idx, self.traits))
 
     def render(self, trait_dict):
         target = self.card.render_back(f'a{self.idx}')

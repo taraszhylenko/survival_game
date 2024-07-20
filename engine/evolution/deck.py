@@ -7,8 +7,8 @@ from engine.render import Render
 class EvolutionDeck:
     def __init__(self):
         self.cards = list()
-        self.h = 0
-        self.l = 0
+        self.h = 3
+        self.l = 3
         self.card_tuples = list()
         self.cards = list()
     
@@ -36,6 +36,9 @@ class EvolutionDeck:
         self.l = max([self.l, back.l + 5, len(short) + 10, len(main) + 10, front.l + 5])
         self.h = max([self.h, back.h + 5, front.h + 7])
 
+    def add_card(self, card):
+        self.cards.append(card)
+
     def create_cards(self):
         for main, short, back, front in self.card_tuples:
             self.cards.append(EvolutionCard(main, short, back, front, self.h, self.l))
@@ -45,3 +48,12 @@ class EvolutionDeck:
 
     def draw(self):
         return self.cards.pop(-1)
+
+    def render(self):
+        return Render.blank(self.h - 2, self.l - 2).add_border(False)
+
+    def render_last_card(self):
+        if len(self.cards) > 0:
+            return self.cards[-1].render_front('', '')
+        else:
+            return self.render()

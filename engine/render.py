@@ -89,6 +89,28 @@ class Render:
             idx = (idx + 1) % 4
         return target
 
+    @staticmethod
+    def merge_into_row(renders):
+        h = max([r.h for r in renders])
+        l = sum([r.l for r in renders]) 
+        out = Render.blank(h, l)
+        cuml = 0
+        for i, r in enumerate(renders):
+            out = out.insert_from(r, h - r.h, cuml)
+            cuml += r.l
+        return out
+
+    @staticmethod
+    def merge_into_column(renders):
+        h = sum([r.h for r in renders])
+        l = max([r.l for r in renders]) 
+        out = Render.blank(h, l)
+        cumh = 0
+        for r in renders:
+            out = out.insert_from(r, cumh, 0)
+            cumh += r.h
+        return out
+
     def print(self):
         for i in range(self.h):
             for j in range(self.l):

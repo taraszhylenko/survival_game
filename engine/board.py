@@ -5,9 +5,12 @@ from engine.misc.die import Die
 from engine.render import Render
 
 class Board:
-    def __init__(self, evolution_deck, area_deck):
+    def __init__(self, evolution_deck,
+                       evolution_discard,
+                       area_deck,
+                       area_discard):
         self.evolution_deck = evolution_deck
-        self.evolution_discard = list() 
+        self.evolution_discard = evolution_discard 
         self.area_deck = area_deck
         self.die = Die()
         self.animal_dict = dict()
@@ -15,6 +18,7 @@ class Board:
         self.trait_dict  = dict()
         self.trait_ctr   = 0
         self.animal_rows = [[], []]
+        self.area_row    = [[], []]
 
     def cast_animal(self, card, row):
         assert isinstance(card, EvolutionCard)
@@ -38,9 +42,8 @@ class Board:
 
     def discard_trait(self, trait_idx):
         for animal in self.animal_dict.values():
-            if trait_idx in animal.traits:
-                animal.traits.pop(animal.traits.index(trait_idx))
-        self.evolution_discard.append(self.trait_dict[trait_idx].card)
+            animal.remove_trait(trait_idx)
+        self.evolution_discard.add_card(self.trait_dict[trait_idx].card)
         del self.trait_dict[trait_idx]
 
     def discard_animal(self, animal_idx):
@@ -49,18 +52,15 @@ class Board:
         for i in range(2):
             if animal_idx in self.animal_rows[i]:
                 self.animal_rows[i].pop(self.animal_rows[i].index(animal_idx))
-        self.evolution_discard.append(self.animal_dict[animal_idx].card) 
-        del animal_dict[animal_idx]
+        self.evolution_discard.add_card(self.animal_dict[animal_idx].card) 
+        del self.animal_dict[animal_idx]
 
-    def render_row(self, animals):
-        animal_renders = [animal.render(self.trait_dict) for animal in animals]
-        h = max([r.h for r in animal_renders])
-        l = sum([r.l for r in animal_renders]) + len(animal_renders) - 1
-        render = Render.blank(h, l)
-        curl = 0
-        for i, r in enumerate(animal_renders):
-            render = render.insert_from(r, h - r.h, curl)
-            curl += r.l
-        return render
-
-
+    def render(self):
+        row0 = Render.merge_into_row([Render.blank(1, 1)] + [self.animal_dict[i].render(self.trait_dict) for i in self.animal_rows[0]])
+        row1 = Render.merge_into_row([Render.blank(1, 1)] + [self.animal_dict[i].render(self.trait_dict) for i in self.animal_rows[1]])
+        animals = Render.merge_into_column([row0, row1])
+        utilities = Render.merge_into_column([self.evolution_deck.render(),
+                                              self.evolution_discard.render_last_card(),
+                                              self.die.render()]
+                                              )
+        return Render.merge_into_row([animals, utilities])
