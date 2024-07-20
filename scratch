@@ -10,7 +10,7 @@ ediscard = EvolutionDeck()
 ediscard.h = edeck.h
 ediscard.l = edeck.l
 
-board = Board(edeck, None)
+board = Board(edeck, ediscard, None, None)
 
 board.cast_animal(board.evolution_deck.draw(), 0)
 board.cast_trait(board.evolution_deck.draw(), 'main', 0)
@@ -54,4 +54,4 @@ board.cast_trait(board.evolution_deck.draw(), 'short', 3)
 board.cast_trait(board.evolution_deck.draw(), 'main',  3)
 board.cast_trait(board.evolution_deck.draw(), 'short', 1)
 
-board.render()
+board.render().print()
