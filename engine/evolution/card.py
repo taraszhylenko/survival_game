@@ -16,7 +16,7 @@ class EvolutionCard:
         for pic in self.pics:
             assert isinstance(pic, Render)
         for trait in self.traits:
-            assert self.l > len(trait) + 9
+            assert self.l >= len(trait) + 7
         back  = self.pics[co.FACEDOWN]
         front = self.pics[co.FACEUP]
         assert isinstance(self.tag, str)

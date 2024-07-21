@@ -2,13 +2,37 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_animal(self):
+        from engine.render import Render
+        from engine.evolution.card import EvolutionCard
+        from engine.evolution.playable.animal import Animal
+        from engine.enum import TraitType as tt
+        moose = Render.from_txt('asset/card/evolution/back/moose1.txt')
+        blank = Render.blank(1, 1)
+        c0 = EvolutionCard(['poisonous', 'swimming'],
+                moose, blank, 10, 18, '0')
+        c1 = EvolutionCard(['flying', 'carnivorous'], 
+                moose, blank, 10, 18, '1')
+        c2 = EvolutionCard(['piracy', 'fat_tissue'],
+                moose, blank, 10, 18, '2')
+        
+        a1 = Animal(0)
+        a1.add_trait(1, tt.MAIN)
+        a1.add_trait(2, tt.SHORT)
+
+        e1 = pd.read_csv('asset/test/5/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/5/2.csv').to_numpy()
+
+        self.assertTrue((e1 == a1.render({0: c0, 1: c1, 2: c2}).arr).all())
+        self.assertTrue((e2 == a1.render({0: c0, 1: c2, 2: c1}).arr).all())
+
     def test_evolution_card(self):
         from engine.enum import TraitType as tt
         from engine.render import Render
         from engine.evolution.card import EvolutionCard
-        c1 = EvolutionCard(['kuk', 'kek'], 
+        c1 = EvolutionCard(['piracy', 'fat_tissue'], 
                            Render.from_txt('asset/card/evolution/back/moose1.txt'),
-                           Render.blank(1, 1), 10, 13, '0')
+                           Render.blank(1, 1), 10, 17, '0')
         e1 = pd.read_csv('asset/test/4/front.csv').to_numpy()
         e2 = pd.read_csv('asset/test/4/back.csv').to_numpy()
         e3 = pd.read_csv('asset/test/4/main.csv').to_numpy()
