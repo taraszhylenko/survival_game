@@ -27,28 +27,23 @@ class Render:
     def copy(self):
         return Render(self.arr.copy())
 
-    def pad(self, direction, char, tight):
+    def pad(self, direction, char):
         num = ord(char)
-        blank_num = ord(' ')
         if direction == 'up':
-            bot = self.arr[1:] if tight else self.arr
-            top = np.array([[num if el == blank_num else el for el in self.arr[0]]] if tight \
-                    else [[num] * self.l])
+            bot = self.arr
+            top = np.array([[num] * self.l])
             return Render(np.concatenate([top, bot], axis=0))
         elif direction == 'right':
-            left  = self.arr[:, :-1] if tight else self.arr
-            right = np.array([[num if el == blank_num else el] for el in self.arr[:, -1]] if tight \
-                      else [[num]] * self.h)
+            left  = self.arr
+            right = np.array([[num]] * self.h)
             return Render(np.concatenate([left, right], axis=1))
         elif direction == 'down':
-            top = self.arr[:-1] if tight else self.arr
-            bot = np.array([[num if el == blank_num else el for el in self.arr[-1]]] if tight \
-                    else [[num] * self.l])
+            top = self.arr
+            bot = np.array([[num] * self.l])
             return Render(np.concatenate([top, bot], axis=0))
         elif direction == 'left':
-            right  = self.arr[:, 1:] if tight else self.arr
-            left = np.array([[num if el == blank_num else el] for el in self.arr[:, 0]] if tight \
-                        else [[num]] * self.h)
+            right = self.arr
+            left  = np.array([[num]] * self.h)
             return Render(np.concatenate([left, right], axis=1))
         else:
             raise AssertionError(f'{direction=}, should be one of [up, right, down, left]')
@@ -70,11 +65,28 @@ class Render:
         new_arr[i:i+other.h, j:j+other.l] = other.arr
         return Render(new_arr)
 
+    def insert_tag_br(self, tag):
+        tag_render = Render.from_string(tag)
+        return self.insert_from(tag_render, self.h - 1, self.l - 2 - tag_render.l)
+
     def add_border(self, tight_down):
-        return self.pad('down',  '_', tight_down  \
-                  ).pad('left',  '|', False \
-                  ).pad('right', '|', False \
-                  ).pad('up',    '_', False)
+        if tight_down: 
+            tmp = self.replace_row(-1, ' ', '_')
+        else:
+            tmp = self.pad('down',  '_')
+        return tmp.pad('left',  '|' \
+                 ).pad('right', '|' \
+                 ).pad('up',    '_')
+
+    def replace_row(self, row_idx, from_, to_):
+        from_int = ord(from_)
+        to_int   = ord(to_)
+        new_arr = self.arr.copy()
+        for i in range(self.l):
+            if new_arr[row_idx, i] == from_int:
+                new_arr[row_idx, i] = to_int
+        return Render(new_arr)
+
 
     def balloon_to(self, h, l):
         target = self.copy()
@@ -83,9 +95,9 @@ class Render:
         idx = 0
         while h > target.h or l > target.l:
             if dirs[idx] in {'up', 'down'} and h > target.h:
-                target = target.pad(dirs[idx], ' ', False)
+                target = target.pad(dirs[idx], ' ')
             elif dirs[idx] in {'left', 'right'} and l > target.l:
-                target = target.pad(dirs[idx], ' ', False)
+                target = target.pad(dirs[idx], ' ')
             idx = (idx + 1) % 4
         return target
 

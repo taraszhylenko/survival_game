@@ -1,57 +1,43 @@
 from engine.render import Render
+from engine.enum import CardOrientation as co
+from engine.enum import TraitType       as tt
 
 class EvolutionCard:
-    def __init__(self, main, short, back, front, h, l, reqs):
-        self.main  = main
-        self.short = short
-        self.back  = back
-        self.front = front
-        self.h = h
-        self.l = l
-        self.reqs = reqs
+    def __init__(self, traits, back, front, h, l, tag):
+        self.traits = traits
+        self.pics   = [back.balloon_to( h - 2, l - 2).add_border(False),
+                       front.balloon_to(h - 4, l - 2).add_border(False)]
+        self.h   = h
+        self.l   = l
+        self.tag = tag
         self.checks()
    
     def checks(self):
-        assert isinstance(self.back,  Render)
-        assert isinstance(self.front, Render)
-        assert self.l > len(self.main) + 9
-        assert self.l > len(self.short) + 9
-        assert self.l > self.back.l + 4 
-        assert self.l > self.front.l + 4 
-        assert self.h > self.back.h + 4 
-        assert self.h > self.front.h + 6 
-        assert isinstance(self.reqs,  dict)
+        for pic in self.pics:
+            assert isinstance(pic, Render)
+        for trait in self.traits:
+            assert self.l > len(trait) + 9
+        back  = self.pics[co.FACEDOWN]
+        front = self.pics[co.FACEUP]
+        assert isinstance(self.tag, str)
+        assert len(self.tag) < 3
 
-    def render_back(self, tag):
-        assert isinstance(tag, str)
-        assert len(tag) <= 4
-        ballooned = self.back.balloon_to(self.h - 2, self.l - 2)
-        bordered = ballooned.add_border(False)
-        render_tag = Render.from_string(tag)
-        inserted = bordered.insert_from(render_tag, bordered.h-1, bordered.l - 2 - len(tag))
-        return inserted 
+    def render_back(self, with_tag):
+        return self.render_pic(co.FACEDOWN, with_tag)
 
-    def render_front(self):
-        main  = self.render_main('')
-        pic   = self.render_pic()
-        short = self.render_short('')
+    def render_front(self, with_tag):
+        main  = self.render_trait(tt.MAIN,  False)
+        pic   = self.render_pic(co.FACEUP, with_tag)
+        short = self.render_trait(tt.SHORT, False)
         return main.stack_above(pic, True).stack_above(short, True)
+    
+    def render_pic(self, card_orientation, with_tag):
+        return self.pics[card_orientation].insert_tag_br(self.tag if with_tag else '')
 
-    def render_main(self, tag):
-        assert isinstance(tag, str)
-        assert len(tag) <= 4
-        mid_pad = self.l - len(self.main) - 4 - len(tag)
-        return Render.from_string('_' + self.main + '_' * mid_pad + tag + '_').add_border(True) 
-
-    def render_pic(self):
-        return self.front.balloon_to(self.h - 4, self.l - 2).add_border(False)
-
-    def render_short(self, tag):
-        assert isinstance(tag, str)
-        assert len(tag) <= 4
-        mid_pad = self.l - len(self.short) - 4 - len(tag)
-        return Render.from_string('_' + self.short + '_' * mid_pad + tag + '_').add_border(True) 
-
-    def req(self, side):
-        assert side in {'main', 'short'}
-        return self.reqs[side]
+    def render_trait(self, trait_type, with_tag):
+        trait = self.traits[trait_type] 
+        rendered = Render.from_string(trait)
+        for _ in range(self.l - 2 - len(trait)):
+            rendered = rendered.pad('right', '_')
+        bordered = rendered.add_border(True)
+        return bordered.insert_tag_br(self.tag if with_tag else '') 

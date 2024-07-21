@@ -2,6 +2,24 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_evolution_card(self):
+        from engine.enum import TraitType as tt
+        from engine.render import Render
+        from engine.evolution.card import EvolutionCard
+        c1 = EvolutionCard(['kuk', 'kek'], 
+                           Render.from_txt('asset/card/evolution/back/moose1.txt'),
+                           Render.blank(1, 1), 10, 13, '0')
+        e1 = pd.read_csv('asset/test/4/front.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/4/back.csv').to_numpy()
+        e3 = pd.read_csv('asset/test/4/main.csv').to_numpy()
+        e4 = pd.read_csv('asset/test/4/short.csv').to_numpy()
+        
+        self.assertTrue((c1.render_front(True).arr == e1           ).all())
+        self.assertTrue((c1.render_back(True).arr  == e2           ).all())
+        self.assertTrue((c1.render_trait(tt.MAIN,  False).arr == e3).all())
+        self.assertTrue((c1.render_trait(tt.SHORT, True).arr  == e4).all())
+
+
     def test_big_board(self):
         import random
         random.seed(20)
