@@ -65,7 +65,7 @@ class Render:
 
     def insert_from(self, other, i, j):
         assert isinstance(other, Render)
-        assert other.h <= self.h - i and other.l <= self.l - j
+        assert other.h <= self.h - i and other.l <= self.l - j, f"{other.h=}, {self.h=}, {i=}, {other.l=}, {self.l=}, {j=}"
         new_arr = self.arr.copy()
         new_arr[i:i+other.h, j:j+other.l] = other.arr
         return Render(new_arr)

@@ -40,8 +40,4 @@ class EvolutionDeck(Deck):
             new_card = EvolutionCard(main, short, back, front, self.h, self.l, reqs)
             self.add_card(new_card)
 
-    def render_last_card(self):
-        if len(self.cards) > 0:
-            return self.cards[-1].render_front()
-        else:
-            return self.render()
+

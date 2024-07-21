@@ -15,3 +15,6 @@ class Counter:
 
     def render(self):
         return Render.from_string(f'{self.label}: {self.value}')
+
+    def get_count(self):
+        return self.value
