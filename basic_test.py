@@ -2,6 +2,22 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_evolution_deckmaker(self):
+        import random
+        random.seed(20)
+        import numpy as np
+        np.random.seed(20)
+        from engine.evolution.deck_maker import EvolutionDeckMaker
+        evolution_dict, evolution_deck = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        c1  = evolution_dict[1]
+        c2 = evolution_dict[35]
+        e1 = pd.read_csv('asset/test/7/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/7/2.csv').to_numpy()
+        e3 = pd.read_csv('asset/test/7/3.csv').to_numpy()
+        self.assertTrue((c1.render_front(True).arr == e1).all())
+        self.assertTrue((c2.render_front(True).arr == e2).all())
+        self.assertTrue((evolution_deck.render(evolution_dict).arr == e3).all())
+
     def test_evolution_deck(self):
         from engine.render import Render
         from engine.evolution.card import EvolutionCard
