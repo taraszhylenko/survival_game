@@ -11,9 +11,6 @@ class Animal:
     def remove_trait(self, idx):
         self.traits = list(filter(lambda x: x[0] != idx, self.traits))
 
-    def update_req(self, evolution_dict):
-        req = 1
-
     def render(self, evolution_dict):
         render = evolution_dict[self.idx].render_back(True)
         for idx, trait_type in self.traits:

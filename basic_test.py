@@ -2,6 +2,33 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_evolution_deck(self):
+        from engine.render import Render
+        from engine.evolution.card import EvolutionCard
+        from engine.deck import Deck
+        import random
+        random.seed(20)
+        moose = Render.from_txt('asset/card/evolution/back/moose1.txt')
+        blank = Render.blank(1, 1)
+        c0 = EvolutionCard(['poisonous', 'swimming'],
+                moose, blank, 10, 18, '0')
+        c1 = EvolutionCard(['flying', 'carnivorous'], 
+                moose, blank, 10, 18, '1')
+        c2 = EvolutionCard(['piracy', 'fat_tissue'],
+                moose, blank, 10, 18, '2')
+        evolution_dict = {0: c0, 1: c1, 2: c2}
+        ed = Deck()
+        ed.add_card(0)
+        ed.add_card(1)
+        ed.add_card(2)
+        ed.shuffle()
+
+        self.assertTrue(ed.cards == [1, 0, 2])
+        e1 = pd.read_csv('asset/test/6/1.csv').to_numpy()
+        self.assertTrue((ed.render(evolution_dict).arr == e1).all())
+        e2 = pd.read_csv('asset/test/6/2.csv').to_numpy()
+        self.assertTrue((evolution_dict[ed.draw()].render_front(True).arr == e2).all())
+
     def test_animal(self):
         from engine.render import Render
         from engine.evolution.card import EvolutionCard
