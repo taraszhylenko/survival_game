@@ -46,7 +46,7 @@ class Testing(unittest.TestCase):
                 [moose, blank], h, l, '1')
         c2 = EvolutionCard(['piracy', 'fat_tissue'],
                 [moose, blank], h, l, '2')
-        
+
         a1 = Animal(0)
         a1.add_trait(1, tt.MAIN)
         a1.add_trait(2, tt.SHORT)

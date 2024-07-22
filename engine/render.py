@@ -67,7 +67,7 @@ class Render:
 
     def insert_tag_br(self, tag):
         tag_render = Render.from_string(tag)
-        return self.insert_from(tag_render, self.h - 1, self.l - 2 - tag_render.l)
+        return self.insert_from(tag_render, self.h - 1, self.l - 1 - tag_render.l)
 
     def add_border(self, tight_down):
         if tight_down: 
