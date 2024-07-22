@@ -3,10 +3,9 @@ from engine.enum import CardOrientation as co
 from engine.enum import TraitType       as tt
 
 class EvolutionCard:
-    def __init__(self, traits, back, front, h, l, tag):
+    def __init__(self, traits, pics, h, l, tag):
         self.traits = traits
-        self.pics   = [back.balloon_to( h - 2, l - 2).add_border(False),
-                       front.balloon_to(h - 4, l - 2).add_border(False)]
+        self.pics   = pics
         self.h   = h
         self.l   = l
         self.tag = tag
@@ -16,7 +15,7 @@ class EvolutionCard:
         for pic in self.pics:
             assert isinstance(pic, Render)
         for trait in self.traits:
-            assert self.l >= len(trait) + 7
+            assert self.l >= len(trait) + 6
         back  = self.pics[co.FACEDOWN]
         front = self.pics[co.FACEUP]
         assert isinstance(self.tag, str)

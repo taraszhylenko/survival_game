@@ -8,14 +8,16 @@ class Testing(unittest.TestCase):
         from engine.deck import Deck
         import random
         random.seed(20)
-        moose = Render.from_txt('asset/card/evolution/back/moose1.txt')
-        blank = Render.blank(1, 1)
+        h = 10
+        l = 18
+        moose = Render.from_txt('asset/card/evolution/back/moose1.txt').balloon_to(h-2, l-2).add_border(False)
+        blank = Render.blank(1, 1).balloon_to(h-4, l-2).add_border(False)
         c0 = EvolutionCard(['poisonous', 'swimming'],
-                moose, blank, 10, 18, '0')
+                [moose, blank], h, l, '0')
         c1 = EvolutionCard(['flying', 'carnivorous'], 
-                moose, blank, 10, 18, '1')
+                [moose, blank], h, l, '1')
         c2 = EvolutionCard(['piracy', 'fat_tissue'],
-                moose, blank, 10, 18, '2')
+                [moose, blank], h, l, '2')
         evolution_dict = {0: c0, 1: c1, 2: c2}
         ed = Deck()
         ed.add_card(0)
@@ -34,14 +36,16 @@ class Testing(unittest.TestCase):
         from engine.evolution.card import EvolutionCard
         from engine.evolution.playable.animal import Animal
         from engine.enum import TraitType as tt
-        moose = Render.from_txt('asset/card/evolution/back/moose1.txt')
-        blank = Render.blank(1, 1)
+        h = 10
+        l = 18
+        moose = Render.from_txt('asset/card/evolution/back/moose1.txt').balloon_to(h-2, l-2).add_border(False)
+        blank = Render.blank(1, 1).balloon_to(h-4, l-2).add_border(False)
         c0 = EvolutionCard(['poisonous', 'swimming'],
-                moose, blank, 10, 18, '0')
+                [moose, blank], h, l, '0')
         c1 = EvolutionCard(['flying', 'carnivorous'], 
-                moose, blank, 10, 18, '1')
+                [moose, blank], h, l, '1')
         c2 = EvolutionCard(['piracy', 'fat_tissue'],
-                moose, blank, 10, 18, '2')
+                [moose, blank], h, l, '2')
         
         a1 = Animal(0)
         a1.add_trait(1, tt.MAIN)
@@ -57,14 +61,17 @@ class Testing(unittest.TestCase):
         from engine.enum import TraitType as tt
         from engine.render import Render
         from engine.evolution.card import EvolutionCard
-        c1 = EvolutionCard(['piracy', 'fat_tissue'], 
-                           Render.from_txt('asset/card/evolution/back/moose1.txt'),
-                           Render.blank(1, 1), 10, 17, '0')
+        h = 10
+        l = 18
+        moose = Render.from_txt('asset/card/evolution/back/moose1.txt').balloon_to(h-2, l-2).add_border(False)
+        blank = Render.blank(1, 1).balloon_to(h-4, l-2).add_border(False)
+        c1 = EvolutionCard(['piracy', 'fat_tissue'],
+                [moose, blank], h, l, '0')
         e1 = pd.read_csv('asset/test/4/front.csv').to_numpy()
         e2 = pd.read_csv('asset/test/4/back.csv').to_numpy()
         e3 = pd.read_csv('asset/test/4/main.csv').to_numpy()
         e4 = pd.read_csv('asset/test/4/short.csv').to_numpy()
-        
+
         self.assertTrue((c1.render_front(True).arr == e1           ).all())
         self.assertTrue((c1.render_back(True).arr  == e2           ).all())
         self.assertTrue((c1.render_trait(tt.MAIN,  False).arr == e3).all())
