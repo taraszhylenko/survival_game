@@ -2,8 +2,12 @@ from engine.render import Render
 
 class Animal:
     @staticmethod
-    def add_trait(card_list, idx, side):
-        return card_list + [(idx, side)]
+    def create(idx):
+        return [idx]
+
+    @staticmethod
+    def add_trait(card_list, idx, trait_type):
+        return card_list + [(idx, trait_type)]
 
     @staticmethod
     def remove_trait(card_list, idx):
