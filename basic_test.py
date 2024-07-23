@@ -8,7 +8,7 @@ class Testing(unittest.TestCase):
         import numpy as np
         np.random.seed(20)
         from engine.evolution.deck_maker import EvolutionDeckMaker
-        evolution_dict, evolution_deck = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        evolution_dict, evolution_deck, evolution_discard = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
         c1  = evolution_dict[1]
         c2 = evolution_dict[35]
         e1 = pd.read_csv('asset/test/7/1.csv').to_numpy()

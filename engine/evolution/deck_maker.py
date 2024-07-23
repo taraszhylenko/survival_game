@@ -25,7 +25,8 @@ class EvolutionDeckMaker:
 
         idx = 0
         evolution_dict = dict()
-        evolution_deck = Deck()
+        evolution_deck    = Deck()
+        evolution_discard = Deck()
         for _, row in deck_df.iterrows():
             for _ in range(row.quantity):
                 main  = row.main
@@ -36,4 +37,7 @@ class EvolutionDeckMaker:
                 evolution_dict[idx] = card
                 evolution_deck.add_card(idx)
                 idx += 1
-        return evolution_dict, evolution_deck
+        placeholder = EvolutionCard(['empty', 'empty'], [back, front], h, l, idx)
+        evolution_dict[idx] = placeholder
+        evolution_discard.add_card(idx)
+        return evolution_dict, evolution_deck, evolution_discard
