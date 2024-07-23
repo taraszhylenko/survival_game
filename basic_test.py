@@ -17,6 +17,7 @@ class Testing(unittest.TestCase):
         self.assertTrue((c1.render_front(True).arr == e1).all())
         self.assertTrue((c2.render_front(True).arr == e2).all())
         self.assertTrue((evolution_deck.render(evolution_dict).arr == e3).all())
+        self.assertTrue((evolution_discard.render(evolution_dict).arr == e3).all())
 
     def test_evolution_deck(self):
         from engine.render import Render
