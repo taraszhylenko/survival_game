@@ -64,15 +64,16 @@ class Testing(unittest.TestCase):
         c2 = EvolutionCard(['piracy', 'fat_tissue'],
                 [moose, blank], h, l, '2')
 
-        a1 = Animal(0)
-        a1.add_trait(1, tt.MAIN)
-        a1.add_trait(2, tt.SHORT)
+        a1 = [0]
+        # a1 = Animal(0)
+        a1 = Animal.add_trait(a1, 1, tt.MAIN)
+        a1 = Animal.add_trait(a1, 2, tt.SHORT)
 
         e1 = pd.read_csv('asset/test/5/1.csv').to_numpy()
         e2 = pd.read_csv('asset/test/5/2.csv').to_numpy()
 
-        self.assertTrue((e1 == a1.render({0: c0, 1: c1, 2: c2}).arr).all())
-        self.assertTrue((e2 == a1.render({0: c0, 1: c2, 2: c1}).arr).all())
+        self.assertTrue((e1 == Animal.render(a1, {0: c0, 1: c1, 2: c2}).arr).all())
+        self.assertTrue((e2 == Animal.render(a1, {0: c0, 1: c2, 2: c1}).arr).all())
 
     def test_evolution_card(self):
         from engine.enum import TraitType as tt
