@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-class CardOrientation(IntEnum):
+class Side(IntEnum):
     FACEUP   = 1
     FACEDOWN = 0
 

@@ -1,6 +1,6 @@
 from engine.render import Render
-from engine.enum import CardOrientation as co
-from engine.enum import TraitType       as tt
+from engine.enum import Side      as sd
+from engine.enum import TraitType as tt
 
 class EvolutionCard:
     def __init__(self, traits, pics, h, l, tag):
@@ -16,17 +16,17 @@ class EvolutionCard:
             assert isinstance(pic, Render)
         for trait in self.traits:
             assert self.l >= len(trait) + 6
-        back  = self.pics[co.FACEDOWN]
-        front = self.pics[co.FACEUP]
+        back  = self.pics[sd.FACEDOWN]
+        front = self.pics[sd.FACEUP]
         assert isinstance(self.tag, str)
         assert len(self.tag) < 3
 
     def render_back(self, with_tag):
-        return self.render_pic(co.FACEDOWN, with_tag)
+        return self.render_pic(sd.FACEDOWN, with_tag)
 
     def render_front(self, with_tag):
         main  = self.render_trait(tt.MAIN,  False)
-        pic   = self.render_pic(co.FACEUP, with_tag)
+        pic   = self.render_pic(sd.FACEUP, with_tag)
         short = self.render_trait(tt.SHORT, False)
         return main.stack_above(pic, True).stack_above(short, True)
     
