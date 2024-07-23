@@ -37,7 +37,7 @@ class EvolutionDeckMaker:
                 evolution_dict[idx] = card
                 evolution_deck.add_card(idx)
                 idx += 1
-        placeholder = EvolutionCard(['empty', 'empty'], [back, front], h, l, idx)
+        placeholder = EvolutionCard(['empty', 'empty'], [back, front], h, l, str(idx))
         evolution_dict[idx] = placeholder
         evolution_discard.add_card(idx)
         return evolution_dict, evolution_deck, evolution_discard
