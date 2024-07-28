@@ -1,5 +1,5 @@
 from engine.render import Render
-from engine.evolution.playable.animal import Animal
+from engine.evolution.animal import Animal
 
 class Herd:
     def __init__(self):
@@ -17,28 +17,33 @@ class Herd:
                 for t in self.animals[i][1:]:
                     if t[0] == card:
                         idx = i
-        assert idx != -1
         return idx
 
     def cast_trait(self, card, trait_type, target_card):
         idx = self.find_index(target_card)
+        assert idx != -1
         self.animals[idx] = Animal.add_trait(self.animals[idx], card, trait_type)
 
     def discard_trait(self, card):
         idx = self.find_index(card)
+        assert idx != -1
         self.animals[idx] = Animal.remove_trait(self.animals[idx], card)
 
     def find_traits(self, card):
         idx = self.find_index(card)
+        assert idx != -1
         return [c[0] for c in self.animals[idx][1:]]
 
     def discard_animal(self, card):
         idx = self.find_index(card)
+        assert idx != -1
         self.animals.pop(idx)
 
     def swap_animals(self, card1, card2):
         idx1 = self.find_index(card1)
         idx2 = self.find_index(card2)
+        assert idx1 != -1
+        assert idx2 != -1
         tmp = self.animals[idx1]
         self.animals[idx1] = self.animals[idx2]
         self.animals[idx2] = tmp
