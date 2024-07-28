@@ -79,7 +79,7 @@ class Testing(unittest.TestCase):
     def test_animal(self):
         from engine.render import Render
         from engine.evolution.card import EvolutionCard
-        from engine.evolution.playable.animal import Animal
+        from engine.evolution.animal import Animal
         from engine.enum import TraitType as tt
         h = 10
         l = 18
