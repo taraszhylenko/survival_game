@@ -2,6 +2,35 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_habitat(self):
+        import random
+        random.seed(31)
+        import numpy as np
+        np.random.seed(31)
+        from engine.render import Render
+        from engine.area.card import SubAreaCard, Area
+        from engine.area.deck_maker import AreaDeckMaker
+        from engine.area.habitat import Habitat
+        sadict, adeck, adisc = AreaDeckMaker.from_csv('asset/deck/area/base.txt')
+        adeck.shuffle()
+        a1 = adeck.draw()
+        a2 = adeck.draw()
+        a3 = adeck.draw()
+        h = Habitat()
+        h.place(a1)
+        h.place(a2)
+        t1 = h.render(sadict).arr
+        h.place(a3)
+        t2 = h.render(sadict).arr
+        h.pop()
+        t3 = h.render(sadict).arr
+        e1 = pd.read_csv('asset/test/1/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/1/2.csv').to_numpy()
+        e3 = pd.read_csv('asset/test/1/3.csv').to_numpy()
+        self.assertTrue((t1 == e1).all())
+        self.assertTrue((t2 == e2).all())
+        self.assertTrue((t3 == e3).all())
+
     def test_area_deck(self):
         import random
         random.seed(20)

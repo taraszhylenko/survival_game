@@ -41,7 +41,7 @@ class AreaDeckMaker:
                 h = max([h, back2.h + 2, front2.h + 4])
 
 
-        idx = StartIndex.AREA 
+        idx = int(StartIndex.AREA) 
         subarea_dict = dict()
         area_deck    = Deck(DeckType.AREA)
         area_discard = Deck(DeckType.AREA)
