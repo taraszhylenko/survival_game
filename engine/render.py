@@ -18,7 +18,7 @@ class Render:
         arr = []
         for char in string_: 
             arr.append(ord(char))
-        return Render(np.array([arr]))
+        return Render(np.array([arr], dtype=int))
 
     @staticmethod
     def blank(h, l):

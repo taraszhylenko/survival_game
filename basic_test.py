@@ -151,17 +151,33 @@ class Testing(unittest.TestCase):
         self.assertTrue((c1.render_trait(tt.MAIN,  False).arr == e3).all())
         self.assertTrue((c1.render_trait(tt.SHORT, True).arr  == e4).all())
 
-    def test_area_card(self):
-        from engine.area.card import SubArea, AreaCard
+    def test_area_subarea(self):
+        import random
+        random.seed(20)
+        import numpy as np
+        np.random.seed(20)
         from engine.render import Render
-        s1 = SubArea('glaciers', 'without_traits', 1, 0, Render.from_string('*'),       Render.from_string('#'), 10, 20, 0)
-        s2 = SubArea('tundra',   '', 1, 0,           Render.from_string('*'),       Render.from_string('#'), 10, 20, 1)
-        s1.add_green()
-        s1.add_green()
-        c1 = AreaCard()
-        c1.add_subarea(s1)
-        c1.add_subarea(s2)
-        c1.render_front()
-        expected = pd.read_csv('asset/test/2/areacard_render.csv')
-        self.assertTrue((c1.render_front().arr == expected.to_numpy()).all())
+        from engine.area.card import SubAreaCard, Area
+        from engine.enum import AreaTextType as at
+        h = 12
+        l = 22                                     
+        tree     = Render.from_txt('asset/card/area/back/tree1.txt').balloon_to(h-2, l-2).add_border(False)
+        daffodil = Render.from_txt('asset/card/area/back/daffodil1.txt').balloon_to(h-4, l-2).add_border(False)
+        s1 = SubAreaCard(['glaciers', ''],          [tree, daffodil], h, l, '101')
+        s2 = SubAreaCard(['tundra',   'no_traits'], [tree, daffodil], h, l, '102')
+        t1 = s1.render_back(True).arr
+        t2 = s1.render_front(True).arr
+        subareadict = {101: s1, 102: s2}
+        a1 = Area.create(101)
+        a1 = Area.add_subarea(a1, 102)
+        t3 = Area.render_front(a1, subareadict).arr
+        t4 = Area.render_back(a1, subareadict).arr
+        e1 = pd.read_csv('asset/test/3/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/3/2.csv').to_numpy()
+        e3 = pd.read_csv('asset/test/3/3.csv').to_numpy()
+        e4 = pd.read_csv('asset/test/3/4.csv').to_numpy()
+        self.assertTrue((e1 == t1).all())
+        self.assertTrue((e2 == t2).all())
+        self.assertTrue((e3 == t3).all())
+        self.assertTrue((e4 == t4).all())
 

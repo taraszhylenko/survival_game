@@ -16,8 +16,6 @@ class EvolutionCard:
             assert isinstance(pic, Render)
         for trait in self.traits:
             assert self.l >= len(trait) + 6
-        back  = self.pics[sd.FACEDOWN]
-        front = self.pics[sd.FACEUP]
         assert isinstance(self.tag, str)
         assert len(self.tag) < 3
 

@@ -7,3 +7,7 @@ class Side(IntEnum):
 class TraitType(IntEnum):
     MAIN  = 0
     SHORT = 1
+
+class AreaTextType(IntEnum):
+    NAME = 0
+    EFFECT = 1
