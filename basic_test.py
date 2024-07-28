@@ -2,6 +2,35 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_area_deck(self):
+        import random
+        random.seed(20)
+        import numpy as np
+        np.random.seed(20)
+        from engine.render import Render
+        from engine.area.card import SubAreaCard, Area
+        from engine.area.deck_maker import AreaDeckMaker
+        sadict, adeck, adisc = AreaDeckMaker.from_csv('asset/deck/area/base.txt')
+        adeck.shuffle()
+        aa1 = adeck.draw()
+        aa2 = adeck.draw()
+        aa3 = adeck.draw()
+        t1 = Area.render_front(aa1, sadict).arr
+        t2 = Area.render_front(aa2, sadict).arr
+        t3 = Area.render_front(aa3, sadict).arr
+        t4 = adeck.render(sadict).arr
+        t5 = adisc.render(sadict).arr
+        e1 = pd.read_csv('asset/test/2/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/2/2.csv').to_numpy()
+        e3 = pd.read_csv('asset/test/2/3.csv').to_numpy()
+        e4 = pd.read_csv('asset/test/2/4.csv').to_numpy()
+        e5 = pd.read_csv('asset/test/2/5.csv').to_numpy()
+        self.assertTrue((t1 == e1).all())
+        self.assertTrue((t2 == e2).all())
+        self.assertTrue((t3 == e3).all())
+        self.assertTrue((t4 == e4).all())
+        self.assertTrue((t5 == e5).all())
+
     def test_hand(self):
         import random
         random.seed(20)
