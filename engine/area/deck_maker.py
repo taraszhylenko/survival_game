@@ -2,15 +2,14 @@ import pandas as pd
 import numpy  as np
 import random
 
-from engine.area.card    import AreaCard, SubArea
-from engine.misc.counter import Counter
-from engine.render import Render
+from engine.area.card    import SubAreaCard
 from engine.deck import Deck
+from engine.render import Render
+from engine.enum import StartIndex, EndIndex
 
-class AreaDeck(Deck):
+class AreaDeckMaker:
     @staticmethod
     def from_csv(csv_file):
-        ad = AreaDeck()
         deck_df = pd.read_csv(csv_file).fillna('').astype({'name1':     str,
                                                           'effect1':   str,
                                                           'back_txt1': str,
@@ -20,29 +19,60 @@ class AreaDeck(Deck):
                                                           'back_txt2': str,
                                                           'front_txt2': str,
                                                           'quantity':  int})
-        assert 'red1'   in deck_df.columns
-        assert 'green1' in deck_df.columns
-        assert 'red2'   in deck_df.columns
-        assert 'green2' in deck_df.columns
+        l = 0
+        h = 0
+        for _, row in deck_df.iterrows():
+            name1 = row.name1
+            name2 = row.name2
+            effect1 = row.effect1
+            effect2 = row.effect2
+            back1 = Render.from_txt(row.back_txt1)
+            back2 = Render.from_txt(row.back_txt2)
+            front1 = Render.from_txt(row.front_txt1)
+            front2 = Render.from_txt(row.front_txt2)
+            l = max([l, len(name1) + 3, len(effect1) + 3,
+                        len(name2) + 3, len(effect2) + 3,
+                        back1.l + 2,    front1.l + 2,
+                        back2.l + 2,    front2.l + 2,
+                        13])
+            h = max([h, back1.h + 2, front1.h + 4,
+                        back2.h + 2, front2.h + 4])
+
+
+        idx = StartIndex.AREA 
+        subarea_dict = dict()
+        area_deck    = Deck()
+        area_discard = Deck()
         for _, row in deck_df.iterrows():
             for _ in range(row.quantity):
-                subareas = []
-                subareas.append((row.name1,
-                                 row.effect1,
-                                 row.red1,
-                                 row.green1,
-                                 row.back_txt1,
-                                 row.front_txt1))
-                if row.name2 != '':
-                    subareas.append((row.name2,
-                                     row.effect2,
-                                     row.red2,
-                                     row.green2,
-                                     row.back_txt2,
-                                     row.front_txt2))
-                ad.add_card_spec(subareas)
-        ad.create_cards()
-        ad.shuffle()
+                name1 = row.name1
+                name2 = row.name2
+                effect1 = row.effect1
+                effect2 = row.effect2
+                back1 = Render.from_txt(row.back_txt1)
+                back2 = Render.from_txt(row.back_txt2)
+                front1 = Render.from_txt(row.front_txt1)
+                front2 = Render.from_txt(row.front_txt2)
+                s1 = SubAreaCard([name1, effect1],
+                                 [back1, front1],
+                                 h, l, str(idx))
+                a = Area.create(idx) 
+                subarea_dict[idx] = s1
+                idx += 1
+                assert StartIndex.AREA <= idx <= EndIndex.AREA
+                if name2 != '':
+                    s2 = SubAreaCard([name2, effect2],
+                                     [back2, front2],
+                                     h, l, str(idx))
+                    subarea_dict[idx] = s2
+                    a = Area.add_subarea(idx)
+                    idx += 1
+                    assert StartIndex.AREA <= idx <= EndIndex.AREA
+                Deck.add(a)
+        placeholder = SubAreaCard(['empty', 'empty'], [back1, front1], h, l, str(idx))
+        subarea_dict[idx] = placeholder
+        placeholder_area = Area.create(idx)
+        area_discard.add(placeholder)
         return ad
 
     def add_card_spec(self, subareas):

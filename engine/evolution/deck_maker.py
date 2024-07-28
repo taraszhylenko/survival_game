@@ -2,7 +2,7 @@ import pandas as pd
 
 from engine.evolution.card import EvolutionCard
 from engine.deck import Deck
-from engine.enum import StartIndex, EndIndex
+from engine.enum import StartIndex, EndIndex, DeckType
 from engine.render import Render
 
 class EvolutionDeckMaker:
@@ -26,8 +26,8 @@ class EvolutionDeckMaker:
 
         idx = int(StartIndex.EVOLUTION)
         evolution_dict = dict()
-        evolution_deck    = Deck()
-        evolution_discard = Deck()
+        evolution_deck    = Deck(DeckType.EVOLUTION)
+        evolution_discard = Deck(DeckType.EVOLUTION)
         for _, row in deck_df.iterrows():
             for _ in range(row.quantity):
                 main  = row.main
@@ -36,10 +36,10 @@ class EvolutionDeckMaker:
                 front = Render.from_txt(row.front_txt).balloon_to(h - 4, l - 2).add_border(False)
                 card = EvolutionCard([main, short], [back, front], h, l, str(idx))
                 evolution_dict[idx] = card
-                evolution_deck.add_card(idx)
+                evolution_deck.add(idx)
                 idx += 1
                 assert StartIndex.EVOLUTION <= idx <= EndIndex.EVOLUTION
         placeholder = EvolutionCard(['empty', 'empty'], [back, front], h, l, str(idx))
         evolution_dict[idx] = placeholder
-        evolution_discard.add_card(idx)
+        evolution_discard.add(idx)
         return evolution_dict, evolution_deck, evolution_discard

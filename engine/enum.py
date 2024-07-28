@@ -19,3 +19,7 @@ class StartIndex(IntEnum):
 class EndIndex(IntEnum):
     EVOLUTION = 99
     AREA = 400
+
+class DeckType(IntEnum):
+    EVOLUTION = 0
+    AREA = 1

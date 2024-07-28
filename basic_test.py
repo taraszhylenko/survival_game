@@ -79,6 +79,7 @@ class Testing(unittest.TestCase):
         from engine.render import Render
         from engine.evolution.card import EvolutionCard
         from engine.deck import Deck
+        from engine.enum import DeckType
         import random
         random.seed(20)
         h = 10
@@ -92,13 +93,13 @@ class Testing(unittest.TestCase):
         c2 = EvolutionCard(['piracy', 'fat_tissue'],
                 [moose, blank], h, l, '2')
         evolution_dict = {0: c0, 1: c1, 2: c2}
-        ed = Deck()
-        ed.add_card(0)
-        ed.add_card(1)
-        ed.add_card(2)
+        ed = Deck(DeckType.EVOLUTION)
+        ed.add(0)
+        ed.add(1)
+        ed.add(2)
         ed.shuffle()
 
-        self.assertTrue(ed.cards == [1, 0, 2])
+        self.assertTrue(ed.things == [1, 0, 2])
         e1 = pd.read_csv('asset/test/6/1.csv').to_numpy()
         self.assertTrue((ed.render(evolution_dict).arr == e1).all())
         e2 = pd.read_csv('asset/test/6/2.csv').to_numpy()
