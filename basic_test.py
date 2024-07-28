@@ -2,6 +2,34 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_hand(self):
+        import random
+        random.seed(20)
+        import numpy as np
+        np.random.seed(20)
+        from engine.evolution.deck_maker import EvolutionDeckMaker
+        from engine.enum import TraitType as tt
+        evolution_dict, evolution_deck, evolution_discard = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        evolution_deck.shuffle()
+        from engine.evolution.hand import Hand
+        hh = Hand()
+        cc = [evolution_deck.draw() for _ in range(10)]
+        hh.add(cc[0])
+        hh.add(cc[1])
+        hh.add(cc[2])
+        hh.add(cc[3])
+        hh.add(cc[4])
+        hh.add(cc[5])
+        t1 = hh.render(evolution_dict).arr
+        hh.discard(cc[4])
+        hh.discard(cc[2])
+        hh.discard(cc[0])
+        t2 = hh.render(evolution_dict).arr
+        e1 = pd.read_csv('asset/test/9/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/9/2.csv').to_numpy()
+        self.assertTrue((t1 == e1).all())
+        self.assertTrue((t2 == e2).all())
+
     def test_herd(self):
         import random
         random.seed(20)
