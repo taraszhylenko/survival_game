@@ -17,7 +17,7 @@ class EvolutionCard:
         for trait in self.traits:
             assert self.l >= len(trait) + 6
         assert isinstance(self.tag, str)
-        assert len(self.tag) < 3
+        assert len(self.tag) < 3, f'{self.tag=}'
 
     def render_back(self, with_tag):
         return self.render_pic(sd.FACEDOWN, with_tag)

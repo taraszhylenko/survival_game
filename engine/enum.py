@@ -11,3 +11,11 @@ class TraitType(IntEnum):
 class AreaTextType(IntEnum):
     NAME = 0
     EFFECT = 1
+
+class StartIndex(IntEnum):
+    EVOLUTION = 0
+    AREA = 200
+
+class EndIndex(IntEnum):
+    EVOLUTION = 99
+    AREA = 400
