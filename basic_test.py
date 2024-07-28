@@ -2,6 +2,34 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_herd(self):
+        import random
+        random.seed(20)
+        import numpy as np
+        np.random.seed(20)
+        from engine.evolution.deck_maker import EvolutionDeckMaker
+        from engine.enum import TraitType as tt
+        evolution_dict, evolution_deck, evolution_discard = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        evolution_deck.shuffle()
+        from engine.evolution.herd import Herd
+        hh = Herd()
+        cc = [evolution_deck.draw() for _ in range(10)]
+        hh.cast_animal(cc[0])
+        hh.cast_animal(cc[1])
+        hh.cast_animal(cc[2])
+        hh.cast_trait(cc[3], tt.MAIN,  cc[0])
+        hh.cast_trait(cc[4], tt.SHORT, cc[1])
+        hh.cast_trait(cc[5], tt.MAIN,  cc[2])
+        hh.cast_trait(cc[6], tt.SHORT, cc[2])
+        hh.cast_trait(cc[7], tt.MAIN,  cc[1])
+        t1 = hh.render(evolution_dict).arr
+        hh.swap_animals(cc[0], cc[1])
+        t2 = hh.render(evolution_dict).arr
+        e1 = pd.read_csv('asset/test/8/1.csv').to_numpy()
+        e2 = pd.read_csv('asset/test/8/2.csv').to_numpy()
+        self.assertTrue((t1 == e1).all())
+        self.assertTrue((t2 == e2).all())
+
     def test_evolution_deckmaker(self):
         import random
         random.seed(20)

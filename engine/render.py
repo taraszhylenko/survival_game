@@ -102,7 +102,7 @@ class Render:
         return target
 
     @staticmethod
-    def merge_into_row(renders):
+    def merge_row(renders):
         h = max([r.h for r in renders])
         l = sum([r.l for r in renders]) 
         out = Render.blank(h, l)
@@ -113,7 +113,7 @@ class Render:
         return out
 
     @staticmethod
-    def merge_into_column(renders):
+    def merge_column(renders):
         h = sum([r.h for r in renders])
         l = max([r.l for r in renders]) 
         out = Render.blank(h, l)
