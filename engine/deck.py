@@ -20,6 +20,9 @@ class Deck:
         assert len(self.things) > 0, "Can't draw from empty deck"
         return self.things.pop(-1)
 
+    def size(self):
+        return len(self.things)
+
     def render(self, thing_dict):
         assert len(self.things) > 0
         if self.type == DeckType.EVOLUTION:
