@@ -8,31 +8,38 @@ class Herd:
     def cast_animal(self, card):
         self.animals.append(Animal.create(card))
 
-    def find_index(self, card):
+    def find_animal_index(self, card):
         idx = -1
         for i in range(len(self.animals)):
             if self.animals[i][0] == card:
                 idx = i
-            else:
-                for t in self.animals[i][1:]:
-                    if t[0] == card:
-                        idx = i
         return idx
+
+    def find_trait_index(self, card):
+        idx = -1
+        for i in range(len(self.animals)):
+            for t in self.animals[i][1:]:
+                if t[0] == card:
+                    idx = i
+        return idx
+
+    def find_index(self, card):
+        return max([-1, self.find_animal_index(card), self.find_trait_index(card)])
 
     def cast_trait(self, card, trait_type, target_card):
         idx = self.find_index(target_card)
-        assert idx != -1
+        assert idx != -1, f"player doesn't have {target_card} in herd"
         self.animals[idx] = Animal.add_trait(self.animals[idx], card, trait_type)
 
     def discard_trait(self, card):
         idx = self.find_index(card)
-        assert idx != -1
+        assert idx != -1, f"player doesn't have {card} in traits"
         self.animals[idx] = Animal.remove_trait(self.animals[idx], card)
 
-    def find_traits(self, card):
+    def find_all_cards(self, card):
         idx = self.find_index(card)
         assert idx != -1
-        return [c[0] for c in self.animals[idx][1:]]
+        return [self.animals[idx][0]] + [c[0] for c in self.animals[idx][1:]]
 
     def discard_animal(self, card):
         idx = self.find_index(card)

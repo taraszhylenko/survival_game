@@ -103,14 +103,17 @@ class Render:
 
     @staticmethod
     def merge_row(renders):
-        h = max([r.h for r in renders])
-        l = sum([r.l for r in renders]) 
-        out = Render.blank(h, l)
-        cuml = 0
-        for i, r in enumerate(renders):
-            out = out.insert_from(r, h - r.h, cuml)
-            cuml += r.l
-        return out
+        if len(renders) > 0:
+            h = max([r.h for r in renders])
+            l = sum([r.l for r in renders]) 
+            out = Render.blank(h, l)
+            cuml = 0
+            for i, r in enumerate(renders):
+                out = out.insert_from(r, h - r.h, cuml)
+                cuml += r.l
+            return out
+        else:
+            return Render.blank(1, 1)
 
     @staticmethod
     def merge_column(renders):

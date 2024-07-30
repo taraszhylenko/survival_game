@@ -16,7 +16,7 @@ class Hand:
 
     def discard(self, card):
         idx = self.find_index(card)
-        assert idx != -1
+        assert idx != -1, f"player doesn't have {card} in hand"
         self.cards.pop(idx)
 
     def render(self, card_dict):
