@@ -1,14 +1,14 @@
 def find_animal_herd(game, card):
     idx = -1
     for i in range(game.num_players):
-        if game.herds[i].find_animal_index(card) != -1
+        if game.herds[i].find_animal_index(card) != -1:
             idx = i
     return idx
 
 def find_trait_herd(game, card):
     idx = -1
     for i in range(game.num_players):
-        if game.herds[i].find_trait_index(card) != -1
+        if game.herds[i].find_trait_index(card) != -1:
             idx = i
     return idx
 
@@ -35,7 +35,7 @@ class CastTrait:
         assert 'player' in args
         assert 'card' in args
         assert 'trait_type' in args
-        assert 'target_card' in args
+        assert 'target_cards' in args
         self.player       = args['player']
         self.card         = args['card']
         self.trait_type   = args['trait_type']
@@ -53,8 +53,8 @@ class CastTrait:
     def apply(self, game):
         game.hands[self.player].discard(self.card)
         for tc in self.target_cards:
-            tp = find_animal_herd(game, self.card)
-            self.herds[tp].cast_trait(self.card, self.trait_type, tc)
+            tp = find_animal_herd(game, tc)
+            game.herds[tp].cast_trait(self.card, self.trait_type, tc)
 
 class DiscardTrait:
     def __init__(self, args):
@@ -64,7 +64,7 @@ class DiscardTrait:
         self.card = args['card']
 
     def feasible(self, game):
-        player_owns_trait = find_trait_herd(game, self.card) == player
+        player_owns_trait = find_trait_herd(game, self.card) == self.player
         if player_owns_trait:
             return True, 'ok'
         else:
@@ -72,7 +72,7 @@ class DiscardTrait:
 
     def apply(self, game):
         while game.herds[self.player].find_trait_index(self.card) != -1:
-            game.herds[self.player].discard_trait(card)
+            game.herds[self.player].discard_trait(self.card)
         game.edisc.add(self.card)
 
 class DiscardAnimal:
@@ -83,7 +83,7 @@ class DiscardAnimal:
         self.card = args['card']
 
     def feasible(self, game):
-        player_owns_animal = find_animal_herd(game, self.card) == player
+        player_owns_animal = find_animal_herd(game, self.card) == self.player
         if player_owns_animal:
             return True, 'ok'
         else:
