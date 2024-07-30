@@ -2,6 +2,64 @@ import pandas as pd
 import unittest
 
 class Testing(unittest.TestCase):
+    def test_game1(self):
+        import random
+        random.seed(31)
+        import numpy as np
+        np.random.seed(31)
+        from engine.game import Game
+        from engine.enum import TraitType as tt
+        gg = Game('asset/deck/evolution/base.txt',
+                  'asset/deck/area/base.txt',
+                  2)
+        gg.draw(0)
+        gg.draw(0)
+        gg.draw(0)
+        gg.draw(0)
+        gg.draw(1)
+        gg.draw(1)
+        gg.draw(1)
+        gg.draw(1)
+        t1 = gg.render().arr
+        gg.cast_animal(0, 14)
+        t2 = gg.render().arr
+        gg.cast_trait(1, 17, tt.SHORT, [14]) 
+        t3 = gg.render().arr
+        gg.cast_animal(0, 60)
+        gg.cast_trait(0, 50, tt.SHORT, [14, 60]) 
+        t4 = gg.render().arr
+        t5 = gg.edisc.things.copy()
+        gg.discard_animal(0, 14)
+        t6 = gg.edisc.things.copy()
+        t7 = gg.render().arr
+        gg.cast_animal(1, 18)
+        t8 = gg.render().arr
+        gg.cast_trait(1, 87, tt.MAIN, [18])
+        t9 = gg.render().arr
+        gg.discard_trait(0, 87) # should fail
+        gg.discard_trait(1, 87)
+        t10 = gg.render().arr
+        t11 = gg.edisc.things.copy()
+        e1  = pd.read_csv('asset/test/10/1.csv').to_numpy()
+        e2  = pd.read_csv('asset/test/10/2.csv').to_numpy()
+        e3  = pd.read_csv('asset/test/10/3.csv').to_numpy()
+        e4  = pd.read_csv('asset/test/10/4.csv').to_numpy()
+        e7  = pd.read_csv('asset/test/10/7.csv').to_numpy()
+        e8  = pd.read_csv('asset/test/10/8.csv').to_numpy()
+        e9  = pd.read_csv('asset/test/10/9.csv').to_numpy()
+        e10 = pd.read_csv('asset/test/10/10.csv').to_numpy()
+        self.assertTrue((t1  == e1).all())
+        self.assertTrue((t2  == e2).all())
+        self.assertTrue((t3  == e3).all())
+        self.assertTrue((t4  == e4).all())
+        self.assertTrue(t5  == [94])
+        self.assertTrue(t6  == [94, 17, 50, 14])
+        self.assertTrue((t7  == e7).all())
+        self.assertTrue((t8  == e8).all())
+        self.assertTrue((t9  == e9).all())
+        self.assertTrue((t10 == e10).all())
+        self.assertTrue(t11  == [94, 17, 50, 14, 87])
+
     def test_habitat(self):
         import random
         random.seed(31)
