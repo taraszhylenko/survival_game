@@ -2,7 +2,6 @@ import pandas as pd
 import random
 
 from engine.enum import DeckType
-from engine.misc.counter import Counter
 from engine.render import Render
 
 class Deck:

@@ -69,6 +69,9 @@ class Render:
         tag_render = Render.from_string(tag)
         return self.insert_from(tag_render, self.h - 1, self.l - 1 - tag_render.l)
 
+    def add_title_above(self, title):
+        return Render.merge_column([Render.from_string(title), self])
+
     def add_border(self, tight_down):
         if tight_down: 
             tmp = self.replace_row(-1, ' ', '_')

@@ -69,7 +69,7 @@ class Testing(unittest.TestCase):
         from engine.area.card import SubAreaCard, Area
         from engine.area.deck_maker import AreaDeckMaker
         from engine.area.habitat import Habitat
-        sadict, adeck, adisc = AreaDeckMaker.from_csv('asset/deck/area/base.txt')
+        sadict, adeck, adisc, _, _ = AreaDeckMaker.from_csv('asset/deck/area/base.txt')
         adeck.shuffle()
         a1 = adeck.draw()
         a2 = adeck.draw()
@@ -97,7 +97,7 @@ class Testing(unittest.TestCase):
         from engine.render import Render
         from engine.area.card import SubAreaCard, Area
         from engine.area.deck_maker import AreaDeckMaker
-        sadict, adeck, adisc = AreaDeckMaker.from_csv('asset/deck/area/base.txt')
+        sadict, adeck, adisc, _, _ = AreaDeckMaker.from_csv('asset/deck/area/base.txt')
         adeck.shuffle()
         aa1 = adeck.draw()
         aa2 = adeck.draw()
@@ -125,7 +125,7 @@ class Testing(unittest.TestCase):
         np.random.seed(20)
         from engine.evolution.deck_maker import EvolutionDeckMaker
         from engine.enum import TraitType as tt
-        evolution_dict, evolution_deck, evolution_discard = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        evolution_dict, evolution_deck, evolution_discard, _, _ = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
         evolution_deck.shuffle()
         from engine.evolution.hand import Hand
         hh = Hand()
@@ -153,7 +153,7 @@ class Testing(unittest.TestCase):
         np.random.seed(20)
         from engine.evolution.deck_maker import EvolutionDeckMaker
         from engine.enum import TraitType as tt
-        evolution_dict, evolution_deck, evolution_discard = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        evolution_dict, evolution_deck, evolution_discard, _, _ = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
         evolution_deck.shuffle()
         from engine.evolution.herd import Herd
         hh = Herd()
@@ -180,7 +180,7 @@ class Testing(unittest.TestCase):
         import numpy as np
         np.random.seed(20)
         from engine.evolution.deck_maker import EvolutionDeckMaker
-        evolution_dict, evolution_deck, evolution_discard = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
+        evolution_dict, evolution_deck, evolution_discard, _, _ = EvolutionDeckMaker.from_csv('asset/deck/evolution/base.txt')
         c1  = evolution_dict[1]
         c2 = evolution_dict[35]
         e1 = pd.read_csv('asset/test/7/1.csv').to_numpy()

@@ -75,4 +75,4 @@ class AreaDeckMaker:
         subarea_dict[idx] = placeholder
         placeholder_area = Area.create(idx)
         area_discard.add(placeholder_area)
-        return subarea_dict, area_deck, area_discard
+        return subarea_dict, area_deck, area_discard, h, l

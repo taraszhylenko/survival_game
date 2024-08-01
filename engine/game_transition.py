@@ -1,3 +1,5 @@
+from engine.misc.stats import Stats
+
 def find_animal_herd(game, card):
     idx = -1
     for i in range(game.num_players):
@@ -27,6 +29,13 @@ class CastAnimal:
             return False, f"Player {self.player} doesn't have card {self.card}"
 
     def apply(self, game):
+        stats = Stats()
+        stats.add('req')
+        stats.add('red')
+        stats.add('blu')
+        stats.add('grn')
+        stats.add('fat')
+        game.sdict[self.card] = stats
         game.hands[self.player].discard(self.card)
         game.herds[self.player].cast_animal(self.card)
 
@@ -139,6 +148,31 @@ class DrawCard:
     def apply(self, game):
         game.hands[self.player].add(game.edeck.draw())
 
- 
+class PlaceArea:
+    def __init__(self, args):
+        pass
 
+    def feasible(self, game):
+        has_cards = game.adeck.size() > 0
+        habitat_not_full = game.habitat.size() < game.num_players + 1
+        if has_cards and habitat_not_full:
+            return True, 'ok'
+        else:
+            return False, f'{has_cards=}; {habitat_not_full=}'
 
+    def apply(self, game):
+        game.habitat.place(game.adeck.draw())
+
+class RemoveArea:
+    def __init__(self, args):
+        pass
+
+    def feasible(self, game):
+        habitat_full = game.habitat.size() == game.num_players + 1
+        if habitat_full:
+            return True, 'ok'
+        else:
+            return False, f"{habitat_full=}"
+
+    def apply(self, game):
+        game.adisc.add(game.habitat.pop())

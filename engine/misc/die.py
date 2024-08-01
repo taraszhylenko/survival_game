@@ -11,4 +11,4 @@ class Die:
         return self.val
 
     def render(self):
-        return Render.from_string(f'{self.val}').add_border(False)
+        return Render.from_string(f'{self.val}').balloon_to(1, 3).add_border(False)

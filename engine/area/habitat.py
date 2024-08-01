@@ -8,6 +8,9 @@ class Habitat:
     def place(self, area):
         self.areas.insert(0, area)
 
+    def size(self):
+        return len(self.areas)
+
     def pop(self):
         return self.areas.pop(-1)
 

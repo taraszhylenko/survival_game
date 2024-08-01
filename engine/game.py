@@ -10,20 +10,23 @@ from engine.game_transition import CastAnimal, \
                                    DiscardTrait, \
                                    DiscardAnimal, \
                                    SwapAnimals, \
-                                   DrawCard
+                                   DrawCard, \
+                                   PlaceArea, \
+                                   RemoveArea
 
 class Game:
     def __init__(self, evolution_deck_csv,
                        area_deck_csv,
                        num_players):
-        self.edict,  self.edeck, self.edisc = EvolutionDeckMaker.from_csv(evolution_deck_csv)
-        self.sadict, self.adeck, self.adisc = AreaDeckMaker.from_csv(area_deck_csv)
+        self.edict,  self.edeck, self.edisc, self.eh, self.el = EvolutionDeckMaker.from_csv(evolution_deck_csv)
+        self.sadict, self.adeck, self.adisc, self.ah, self.al = AreaDeckMaker.from_csv(area_deck_csv)
         self.edeck.shuffle()
         self.adeck.shuffle()
         self.habitat = Habitat()
         self.die   = Die()
         self.hands = [Hand() for _ in range(num_players)]
         self.herds = [Herd() for _ in range(num_players)]
+        self.sdict = dict()
         self.num_players = num_players
 
     def draw(self, player):
@@ -55,10 +58,21 @@ class Game:
         else:
             print(f'Transition infeasible: {reason}')
 
-    def render(self):
-        players = Render.merge_column([Render.merge_column([Render.from_string(f'vvv Player {i} vvv'),
-                                                            self.hands[i].render(self.edict),
-                                                            self.herds[i].render(self.edict)]) for i in range(self.num_players)])
+    def place_area(self):
+        self.run_transition(PlaceArea, {})
 
-        return players 
+    def remove_area(self):
+        self.run_transition(RemoveArea, {})
+
+    def render(self):
+        players = Render.merge_column([Render.merge_column([self.hands[i].render(self.edict).add_title_above(f'vvv Player {i} vvv'),
+                                                            self.herds[i].render(self.edict),
+                                                            self.herds[i].render_stats(self.sdict, self.eh, self.el)]) for i in range(self.num_players)])
+        
+        areas = Render.merge_row([self.adeck.render(self.sadict).add_title_above(f'Deck: {self.adeck.size()} cards'),
+                                  self.habitat.render(self.sadict),
+                                  self.adisc.render(self.sadict).add_title_above(f'Discard: {self.adisc.size()} cards')])
+        evolutions = Render.merge_row([self.edeck.render(self.edict).add_title_above(f'Deck: {self.edeck.size()} cards'),
+                                       self.edisc.render(self.edict).add_title_above(f'Discard: {self.edisc.size()} cards')])
+        return Render.merge_row([players, Render.merge_column([areas, self.die.render(), evolutions])])
 
