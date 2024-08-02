@@ -1,3 +1,5 @@
+from engine.enum import AreaTextType as at, ItemType as it
+from engine.evolution.animal import Animal
 from engine.misc.stats import Stats
 
 def find_animal_herd(game, card):
@@ -51,13 +53,14 @@ class CastTrait:
         self.target_cards = args['target_cards']
 
     def feasible(self, game):
-        has_card = game.hands[self.player].find_index(self.card) != -1
+        player_has_card = game.hands[self.player].find_index(self.card) != -1
         one_or_two_targets = 0 < len(self.target_cards) < 3
         animals_in_herds = all([find_animal_herd(game, tc) != -1 for tc in self.target_cards])
-        if has_card and one_or_two_targets and animals_in_herds:
+        same_herd = len(set([find_animal_herd(game, tc) for tc in self.target_cards])) == 1
+        if player_has_card and one_or_two_targets and animals_in_herds and same_herd:
             return True, 'ok'
         else:
-            return False, f"{has_card=}; {one_or_two_targets=}; {animals_in_herds=}"
+            return False, f"{player_has_card=}; {one_or_two_targets=}; {animals_in_herds=}; {same_herd=}"
 
     def apply(self, game):
         game.hands[self.player].discard(self.card)
@@ -161,7 +164,16 @@ class PlaceArea:
             return False, f'{has_cards=}; {habitat_not_full=}'
 
     def apply(self, game):
-        game.habitat.place(game.adeck.draw())
+        area = game.adeck.draw()
+        for sa in area:
+            area_name = game.sadict[sa].get_text(at.NAME)
+            stats = Stats()
+            stats.add('red')
+            stats.add('grn')
+            stats.set('red', game.library.get_area_red(area_name))
+            stats.set('grn', game.library.get_area_grn(area_name))
+            game.sdict[sa] = stats
+        game.habitat.place(area)
 
 class RemoveArea:
     def __init__(self, args):
@@ -176,3 +188,79 @@ class RemoveArea:
 
     def apply(self, game):
         game.adisc.add(game.habitat.pop())
+
+class UpdateStats:
+    def __init__(self, args):
+        pass
+
+    def feasible(self, game):
+        return True, 'ok'
+
+    def apply(self, game):
+        game.run_transition(UpdateAnimals, {})
+
+class UpdateAnimals:
+    def __init__(self, args):
+        pass
+
+    def feasible(self, game):
+        return True, 'ok'
+
+    def apply(self, game):
+        for idx in range(game.num_players):
+            herd = game.herds[idx]
+            for animal in herd.animals:
+                req = 1
+                ac = Animal.card(animal)
+                for tc, tt in Animal.traits(animal):
+                    trait = game.edict[tc].get_trait(tt)
+                    req += game.library.get_trait_req(trait)
+                game.sdict[ac].set('req', req)
+
+class TakeItem:
+    def __init__(self, args):
+        assert 'player' in args
+        assert 'card' in args
+        assert 'target_card' in args
+        assert 'item_type' in args
+        self.player       = args['player']
+        self.card         = args['card']
+        self.target_card  = args['target_card']
+        self.item_type    = args['item_type']
+
+    def feasible(self, game):
+        owner = find_animal_herd(game, self.card)
+        idx = game.herds[owner].find_animal_index(self.card)
+        animal = game.herds[owner].get(idx)
+        player_owns_animal = owner == self.player
+        area_in_habitat = game.habitat.contains(self.target_card)
+        area_has_item = game.sdict[self.target_card].get(self.item_type) > 0
+        area_accessible = game.library.area_accessible(Animal.traits_txt(animal, game.edict), 
+                                                       game.sadict[self.target_card].get_text(at.NAME))
+        food_allowed = True
+        if self.item_type in [it.RED, it.BLUE]:
+            food_allowed = game.sdict[self.card].get('req') > \
+                           game.sdict[self.card].get('blu') + \
+                           game.sdict[self.card].get('red')
+        shelter_allowed = True
+        if self.item_type == it.GREEN:
+            shelter_allowed = game.sdict[self.card].get('grn') == 0 or \
+                              Animal.has_trait(animal, game.edict, 'xylophagous')
+        if player_owns_animal and \
+           area_in_habitat and \
+           area_accessible and \
+           area_has_item and \
+           food_allowed and \
+           shelter_allowed:
+            return True, 'ok'
+        else:
+            return False, f'{player_owns_animal=}' + \
+                   f' {area_in_habitat=}' + \
+                   f' {area_accessible=}' + \
+                   f' {area_has_item=}' + \
+                   f' {food_allowed=}' + \
+                   f' {shelter_allowed=}'
+
+    def apply(self, game):
+        game.sdict[self.card].increment(self.item_type)
+        game.sdict[self.target_card].decrement(self.item_type)

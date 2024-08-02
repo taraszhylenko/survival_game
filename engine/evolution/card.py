@@ -37,4 +37,7 @@ class EvolutionCard:
         for _ in range(self.l - 2 - len(trait)):
             rendered = rendered.pad('right', '_')
         bordered = rendered.add_border(True)
-        return bordered.insert_tag_br(self.tag if with_tag else '') 
+        return bordered.insert_tag_br(self.tag if with_tag else '')
+
+    def get_trait(self, trait_type):
+        return self.traits[trait_type]

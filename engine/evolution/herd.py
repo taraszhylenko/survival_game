@@ -62,5 +62,8 @@ class Herd:
     def render_stats(self, stat_dict, h, l):
         stats = [stat_dict[a[0]].render() for a in self.animals] 
         return Render.merge_row([stat.balloon_to(stat.h, l) for stat in stats])
-        
+    
+    def get(self, idx):
+        return self.animals[idx] 
+
 

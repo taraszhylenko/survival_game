@@ -39,6 +39,9 @@ class SubAreaCard:
             rendered = rendered.pad('right', '_')
         return rendered.add_border(True) 
 
+    def get_text(self, text_type):
+        return self.texts[text_type]
+
 class Area:
     @staticmethod
     def create(card):

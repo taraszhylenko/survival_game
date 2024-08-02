@@ -1,4 +1,4 @@
-from enum import IntEnum
+from enum import IntEnum, Enum
 
 class Side(IntEnum):
     FACEUP   = 1
@@ -23,3 +23,9 @@ class EndIndex(IntEnum):
 class DeckType(IntEnum):
     EVOLUTION = 0
     AREA = 1
+
+class ItemType(str, Enum):
+    GREEN = 'grn'
+    RED   = 'red'
+    BLUE  = 'blu'
+

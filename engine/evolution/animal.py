@@ -21,3 +21,20 @@ class Animal:
         for idx, trait_type in traits:
             render = render.stack_below(card_dict[idx].render_trait(trait_type, True), True)
         return render
+
+    @staticmethod
+    def card(card_list):
+        return card_list[0]
+
+    @staticmethod
+    def traits(card_list):
+        return card_list[1:]
+
+    @staticmethod
+    def traits_txt(card_list, card_dict):
+        return [card_dict[c].get_trait(t) for c, t in card_list[1:]]
+
+    @staticmethod
+    def has_trait(card_list, card_dict, trait):
+        return any([card_dict[c].get_trait(t) == trait \
+                    for c, t in card_list[1:]])

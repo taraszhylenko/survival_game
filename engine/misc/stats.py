@@ -17,8 +17,15 @@ class Stats:
         self.stats[key] -= 1
         assert 0 <= self.stats[key] < 100
 
+    def set(self, key, value):
+        assert isinstance(key, str)
+        assert len(key) <= 3
+        assert key in self.stats
+        assert 0 <= value < 100
+        self.stats[key] = value
+
     def render(self):
         return Render.merge_column([Render.from_string(f'{k}: {v}') for k, v in self.stats.items()])
 
     def get(self, key):
-        return self.value
+        return self.stats[key]
