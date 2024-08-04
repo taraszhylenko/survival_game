@@ -31,15 +31,22 @@ class Testing(unittest.TestCase):
         t9  = gg.render().arr
         t10 = gg.place_area()
         t11 = gg.render().arr
-        self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == 'ok')
+        t12 = gg.cast_trait(0, 50, tt.SHORT, [60])
+        t12 = gg.swap_animals(0, 14, 50)
+        t13 = gg.swap_animals(0, 14, 60)
+        t14 = gg.render().arr
+        self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == t13 == 'ok')
         self.assertTrue(t2 == 'Transition infeasible: holds=True; appropriate_targets=True; animals_in_herds=True; same_herd=True; detrimental_check=False; can_add_trait=True')
         self.assertTrue(t4 == 'Transition infeasible: holds=True; appropriate_targets=False; animals_in_herds=True; same_herd=True; detrimental_check=True; can_add_trait=True')
+        self.assertTrue(t12 == 'Transition infeasible: controls1=True; controls2=False')
         e1 = pd.read_csv('asset/test/10/1.csv').to_numpy()
         e2 = pd.read_csv('asset/test/10/2.csv').to_numpy()
         e3 = pd.read_csv('asset/test/10/3.csv').to_numpy()
+        e4 = pd.read_csv('asset/test/10/4.csv').to_numpy()
         self.assertTrue((e1 == t5 ).all())
         self.assertTrue((e2 == t9 ).all())
         self.assertTrue((e3 == t11).all())
+        self.assertTrue((e4 == t14).all())
 
     def test_habitat(self):
         import random

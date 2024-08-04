@@ -108,6 +108,11 @@ class Game:
         return Animal.num_grn(a, self.sdict) == 0 or \
                Animal.has_trait(a, self.edict, 'xylophagous')
 
+    def swap_animals(self, player, card1, card2):
+        return self.run_transition(SwapAnimals, {'player': player,
+                                                  'card1': card1,
+                                                  'card2': card2})
+
     def draw(self, player):
         return self.run_transition(DrawCard, {'player': player})
 

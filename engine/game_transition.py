@@ -122,7 +122,6 @@ class SwapAnimals:
         else:
             return False, f"{controls1=}; {controls2=}"
 
-    @staticmethod
     def apply(self, game):
         idx1 = game.find_animal_index(self.c1)
         idx2 = game.find_animal_index(self.c2)
