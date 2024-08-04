@@ -38,3 +38,34 @@ class Animal:
     def has_trait(card_list, card_dict, trait):
         return any([card_dict[c].get_trait(t) == trait \
                     for c, t in card_list[1:]])
+
+    @staticmethod
+    def num_food(card_list, stat_dict):
+        c = card_list[0]
+        return stat_dict[c].get('blu') + \
+               stat_dict[c].get('red')
+
+    @staticmethod
+    def num_fat(card_list, stat_dict):
+        c = card_list[0]
+        return stat_dict[c].get('fat')
+
+    @staticmethod
+    def num_req(card_list, stat_dict):
+        c = card_list[0]
+        return stat_dict[c].get('req')
+
+    @staticmethod
+    def num_grn(card_list, stat_dict):
+        c = card_list[0]
+        return stat_dict[c].get('grn')
+
+    @staticmethod
+    def num_fat_capacity(card_list, card_dict):
+        txts = Animal.traits_txt(card_list, card_dict)
+        return sum([txt =='fat_tissue' for txt in txts])
+
+    @staticmethod
+    def can_add_trait(card_list, card_dict, txt):
+        txts = Animal.traits_txt(card_list, card_dict)
+        return 'stasis' not in txts and ((txt == 'fat_tissue') or (txt not in txts))

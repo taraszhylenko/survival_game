@@ -14,6 +14,9 @@ class Hand:
             idx = self.cards.index(card)
         return idx
 
+    def contains(self, card):
+        return card in self.cards
+
     def discard(self, card):
         idx = self.find_index(card)
         assert idx != -1, f"player doesn't have {card} in hand"

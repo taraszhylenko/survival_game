@@ -5,6 +5,7 @@ class Library:
         self.set_trait_req()
         self.set_area_red()
         self.set_area_grn()
+        self.set_trait_num_targets()
 
     def set_trait_req(self):
         self.trait_req = defaultdict(lambda: 0, {
@@ -17,6 +18,16 @@ class Library:
 
     def get_trait_req(self, trait):
         return self.trait_req[trait]
+
+    def set_trait_num_targets(self):
+        self.trait_num_targets = defaultdict(lambda: 1, {
+                    'partnership': 2,
+                    'communication': 1,
+                    'cooperation': 1
+                })
+
+    def get_trait_num_targets(self, trait):
+        return self.trait_num_targets[trait]
 
     def set_area_red(self):
         self.area_red = defaultdict(lambda: 0, {
@@ -61,3 +72,9 @@ class Library:
             return 'swimming' in traits_txt
         else:
             return True
+
+    def detrimental_check(self, trait, is_own_animal):
+        if is_own_animal:
+            return trait not in ['detrimental_mutation', 'parasite']
+        else:
+            return trait in ['detrimental_mutation', 'parasite', 'stasis']

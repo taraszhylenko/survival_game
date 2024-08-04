@@ -28,4 +28,5 @@ class ItemType(str, Enum):
     GREEN = 'grn'
     RED   = 'red'
     BLUE  = 'blu'
+    FAT   = 'fat'
 

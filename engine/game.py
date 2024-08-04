@@ -1,6 +1,8 @@
 from engine.area.deck_maker import AreaDeckMaker
 from engine.area.habitat import Habitat
+from engine.enum import AreaTextType as at
 from engine.evolution.deck_maker import EvolutionDeckMaker
+from engine.evolution.animal import Animal
 from engine.evolution.hand import Hand
 from engine.evolution.herd import Herd
 from engine.library import Library
@@ -15,7 +17,8 @@ from engine.game_transition import CastAnimal, \
                                    PlaceArea, \
                                    RemoveArea, \
                                    UpdateStats, \
-                                   TakeItem
+                                   TakeItem, \
+                                   ConvertFat
 
 class Game:
     def __init__(self, evolution_deck_csv,
@@ -33,25 +36,97 @@ class Game:
         self.library = Library()
         self.num_players = num_players
 
+    def find_animal_owner(self, card):
+        idx = -1
+        for i in range(self.num_players):
+            if self.herds[i].find_animal_index(card) != -1:
+                idx = i
+        return idx
+
+    def find_animal_index(self, card):
+        o = self.find_animal_owner(card)
+        if o == -1:
+            return -1
+        return self.herds[o].find_animal_index(card) 
+
+    def find_animal(self, card):
+        o   = self.find_animal_owner(card)
+        idx = self.find_animal_index(card)
+        if o != -1 and idx != -1:
+            return self.herds[o].get(idx)
+        else:
+            return -1
+    
+    def find_trait_owner(self, card):
+        idx = -1
+        for i in range(self.num_players):
+            if self.herds[i].find_trait_index(card) != -1:
+                idx = i
+        return idx
+
+    def find_hand_owner(self, card):
+        idx = -1
+        for i in range(self.num_players):
+            if self.hands[i].contains(card):
+                idx = i
+        return idx
+
+    def is_animal(self, card):
+        return len(self.find_animal(card)) > 0
+
+    def animal_traits(self, card):
+        assert self.is_animal(card)
+        return Aimal.traits_txt(self.find_animal(card), self.edict)
+
+    def is_subarea(self, card):
+        return self.habitat.contains(card)
+
+    def subarea_name(self, card):
+        assert self.is_subarea(card)
+        return self.sadict[card].get_text(at.NAME)
+
+    def subarea_has_item(self, card, item_type):
+        return self.sdict[card].get(item_type) > 0
+
+    def subarea_accessible(card, target_card):
+        assert self.is_animal(card)
+        assert self.is_subarea(target_card)
+        return self.library.area_accessible(self.animal_traits(card),
+                                            self.subarea_name(target_card))
+
+    def can_eat(self, card):
+        assert self.is_animal(card)
+        a = self.find_animal(card)
+        return Animal.num_food(a, self.sdict) + \
+               Animal.num_fat(a, self.sdict) < \
+               Animal.num_req(a, self.sdict) + \
+               Animal.num_fat_capacity(a, self.edict)
+
+    def can_hide(self, card):
+        assert self.is_animal(card)
+        a = self.find_animal(card)
+        return Animal.num_grn(a, self.sdict) == 0 or \
+               Animal.has_trait(a, self.edict, 'xylophagous')
+
     def draw(self, player):
-        self.run_transition(DrawCard, {'player': player})
+        return self.run_transition(DrawCard, {'player': player})
 
     def cast_animal(self, player, card):
-        self.run_transition(CastAnimal, {'player': player,
+        return self.run_transition(CastAnimal, {'player': player,
                                          'card': card})
 
     def cast_trait(self, player, card, trait_type, target_cards):
-        self.run_transition(CastTrait, {'player': player,
+        return self.run_transition(CastTrait, {'player': player,
                                         'card': card,
                                         'trait_type': trait_type,
                                         'target_cards': target_cards})
 
     def discard_animal(self, player, card):
-        self.run_transition(DiscardAnimal, {'player': player,
+        return self.run_transition(DiscardAnimal, {'player': player,
                                             'card': card})
     
     def discard_trait(self, player, card):
-        self.run_transition(DiscardTrait, {'player': player,
+        return self.run_transition(DiscardTrait, {'player': player,
                                            'card': card})
 
     def run_transition(self, transition_type, args):
@@ -59,26 +134,31 @@ class Game:
         feasible, reason = transition.feasible(self)
         if feasible:
             transition.apply(self)
+            return 'ok'
         else:
-            print(f'Transition infeasible: {reason}')
+            return f'Transition infeasible: {reason}'
 
     def place_area(self):
-        self.run_transition(PlaceArea, {})
+        return self.run_transition(PlaceArea, {})
 
     def remove_area(self):
-        self.run_transition(RemoveArea, {})
+        return self.run_transition(RemoveArea, {})
 
     def update_stats(self):
-        self.run_transition(UpdateStats, {})
+        return self.run_transition(UpdateStats, {})
+
+    def convert_fat(self):
+        return self.run_transition(ConvertFat, {})
 
     def take_item(self, player, card, item_type, target_card):
-        self.run_transition(TakeItem, {'player': player,
+        return self.run_transition(TakeItem, {'player': player,
                                        'card': card,
                                        'item_type': item_type,
                                        'target_card': target_card})
 
     def render(self):
         self.update_stats()
+        self.convert_fat()
         players = Render.merge_column([Render.merge_column([self.hands[i].render(self.edict).add_title_above(f'vvv Player {i} vvv'),
                                                             self.herds[i].render(self.edict),
                                                             self.herds[i].render_stats(self.sdict, self.eh, self.el)]) for i in range(self.num_players)])

@@ -44,6 +44,7 @@ class Herd:
     def discard_animal(self, card):
         idx = self.find_index(card)
         assert idx != -1
+        assert len(self.animals[idx]) == 1
         self.animals.pop(idx)
 
     def swap_animals(self, card1, card2):

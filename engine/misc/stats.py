@@ -17,6 +17,13 @@ class Stats:
         self.stats[key] -= 1
         assert 0 <= self.stats[key] < 100
 
+    def decrement_one_of(self, keys):
+        for key in keys:
+            if self.stats[key] > 0:
+                self.stats[key] -= 1
+                return
+        assert False
+
     def set(self, key, value):
         assert isinstance(key, str)
         assert len(key) <= 3
