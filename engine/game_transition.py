@@ -275,7 +275,22 @@ class ConvertFat:
                     game.sdict[a[0]].decrement_one_of([it.RED, it.BLUE])
 
 class RunExtinction:
-    pass
+    def __init__(self, args):
+        pass
+
+    def feasible(self, game):
+        return True, 'ok'
+
+    def apply(self, game):
+        for p in range(game.num_players):
+            for c in game.herds[p].animal_cards():
+                if not game.can_survive(c):
+                    game.run_transition(DiscardAnimal, {'player': p,
+                                                        'card': c})
+                else:
+                    for _ in range(Animal.num_req(game.find_animal(c), game.sdict)):
+                        game.sdict[c].decrement_one_of([it.RED, it.BLUE, it.FAT])
+                    game.sdict[c].set(it.GREEN, 0)
 
 class EatAnimal:
     pass

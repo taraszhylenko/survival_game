@@ -42,7 +42,11 @@ class Testing(unittest.TestCase):
         t19 = gg.take_item(1, 18, it.RED, 216)
         t20 = gg.take_item(1, 18, it.RED, 216)
         t21 = gg.render().arr
-        self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == t13 == t15 == t17 == t19 == 'ok')
+        t22 = gg.run_extinction()
+        t23 = gg.render().arr
+        t24 = gg.run_extinction()
+        t25 = gg.render().arr
+        self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == t13 == t15 == t17 == t19 == t22 == t24 == 'ok')
         self.assertTrue(t2 == 'Transition infeasible: holds=True; appropriate_targets=True; animals_in_herds=True; same_herd=True; detrimental_check=False; can_add_trait=True')
         self.assertTrue(t4 == 'Transition infeasible: holds=True; appropriate_targets=False; animals_in_herds=True; same_herd=True; detrimental_check=True; can_add_trait=True')
         self.assertTrue(t12 == 'Transition infeasible: controls1=True; controls2=False')
@@ -54,11 +58,15 @@ class Testing(unittest.TestCase):
         e3 = pd.read_csv('asset/test/10/3.csv').to_numpy()
         e4 = pd.read_csv('asset/test/10/4.csv').to_numpy()
         e5 = pd.read_csv('asset/test/10/5.csv').to_numpy()
+        e6 = pd.read_csv('asset/test/10/6.csv').to_numpy()
+        e7 = pd.read_csv('asset/test/10/7.csv').to_numpy()
         self.assertTrue((e1 == t5 ).all())
         self.assertTrue((e2 == t9 ).all())
         self.assertTrue((e3 == t11).all())
         self.assertTrue((e4 == t14).all())
         self.assertTrue((e5 == t21).all())
+        self.assertTrue((e6 == t23).all())
+        self.assertTrue((e7 == t25).all())
 
     def test_habitat(self):
         import random

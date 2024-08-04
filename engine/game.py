@@ -18,7 +18,8 @@ from engine.game_transition import CastAnimal, \
                                    RemoveArea, \
                                    UpdateStats, \
                                    TakeItem, \
-                                   ConvertFat
+                                   ConvertFat, \
+                                   RunExtinction
 
 class Game:
     def __init__(self, evolution_deck_csv,
@@ -77,6 +78,13 @@ class Game:
     def animal_traits(self, card):
         assert self.is_animal(card)
         return Animal.traits_txt(self.find_animal(card), self.edict)
+
+    def can_survive(self, card):
+        assert self.is_animal(card)
+        a = self.find_animal(card)
+        return Animal.num_food(a, self.sdict) + \
+               Animal.num_fat(a, self.sdict) >= \
+               Animal.num_req(a, self.sdict)
 
     def is_subarea(self, card):
         return self.habitat.contains(card)
@@ -160,6 +168,9 @@ class Game:
                                        'card': card,
                                        'item_type': item_type,
                                        'target_card': target_card})
+
+    def run_extinction(self):
+        return self.run_transition(RunExtinction, {})
 
     def render(self):
         self.update_stats()

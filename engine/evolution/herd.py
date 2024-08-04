@@ -67,4 +67,6 @@ class Herd:
     def get(self, idx):
         return self.animals[idx] 
 
+    def animal_cards(self):
+        return [a[0] for a in self.animals]
 
