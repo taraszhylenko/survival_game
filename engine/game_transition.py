@@ -229,7 +229,7 @@ class TakeItem:
             return False, "area not in habitat"
         player_owns_animal = game.find_animal_owner(self.c) == self.p
         area_has_item = game.subarea_has_item(self.tc, self.it)
-        area_accessible = game.area_accessible(self.c, self.tc)
+        area_accessible = game.subarea_accessible(self.c, self.tc)
         
         can_eat = True
         if self.it in [it.RED, it.BLUE]:
@@ -247,9 +247,8 @@ class TakeItem:
             return True, 'ok'
         else:
             return False, f'{player_owns_animal=}' + \
-                   f' {area_in_habitat=}' + \
-                   f' {area_accessible=}' + \
                    f' {area_has_item=}' + \
+                   f' {area_accessible=}' + \
                    f' {can_eat=}' + \
                    f' {can_hide=}'
 

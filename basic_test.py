@@ -35,18 +35,30 @@ class Testing(unittest.TestCase):
         t12 = gg.swap_animals(0, 14, 50)
         t13 = gg.swap_animals(0, 14, 60)
         t14 = gg.render().arr
-        self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == t13 == 'ok')
+        t15 = gg.cast_trait(1, 5, tt.SHORT, [18])
+        t16 = gg.take_item(1, 18, it.RED, 220)
+        t17 = gg.take_item(1, 18, it.RED, 221)
+        t18 = gg.take_item(1, 18, it.RED, 221)
+        t19 = gg.take_item(1, 18, it.RED, 216)
+        t20 = gg.take_item(1, 18, it.RED, 216)
+        t21 = gg.render().arr
+        self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == t13 == t15 == t17 == t19 == 'ok')
         self.assertTrue(t2 == 'Transition infeasible: holds=True; appropriate_targets=True; animals_in_herds=True; same_herd=True; detrimental_check=False; can_add_trait=True')
         self.assertTrue(t4 == 'Transition infeasible: holds=True; appropriate_targets=False; animals_in_herds=True; same_herd=True; detrimental_check=True; can_add_trait=True')
         self.assertTrue(t12 == 'Transition infeasible: controls1=True; controls2=False')
+        self.assertTrue(t16 == 'Transition infeasible: player_owns_animal=True area_has_item=True area_accessible=False can_eat=True can_hide=True')
+        self.assertTrue(t18 == 'Transition infeasible: player_owns_animal=True area_has_item=False area_accessible=True can_eat=True can_hide=True')
+        self.assertTrue(t20 == 'Transition infeasible: player_owns_animal=True area_has_item=True area_accessible=True can_eat=False can_hide=True')
         e1 = pd.read_csv('asset/test/10/1.csv').to_numpy()
         e2 = pd.read_csv('asset/test/10/2.csv').to_numpy()
         e3 = pd.read_csv('asset/test/10/3.csv').to_numpy()
         e4 = pd.read_csv('asset/test/10/4.csv').to_numpy()
+        e5 = pd.read_csv('asset/test/10/5.csv').to_numpy()
         self.assertTrue((e1 == t5 ).all())
         self.assertTrue((e2 == t9 ).all())
         self.assertTrue((e3 == t11).all())
         self.assertTrue((e4 == t14).all())
+        self.assertTrue((e5 == t21).all())
 
     def test_habitat(self):
         import random

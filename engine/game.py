@@ -76,7 +76,7 @@ class Game:
 
     def animal_traits(self, card):
         assert self.is_animal(card)
-        return Aimal.traits_txt(self.find_animal(card), self.edict)
+        return Animal.traits_txt(self.find_animal(card), self.edict)
 
     def is_subarea(self, card):
         return self.habitat.contains(card)
@@ -88,7 +88,7 @@ class Game:
     def subarea_has_item(self, card, item_type):
         return self.sdict[card].get(item_type) > 0
 
-    def subarea_accessible(card, target_card):
+    def subarea_accessible(self, card, target_card):
         assert self.is_animal(card)
         assert self.is_subarea(target_card)
         return self.library.area_accessible(self.animal_traits(card),
