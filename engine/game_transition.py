@@ -227,7 +227,7 @@ class TakeItem:
             return False, "card is not an animal"
         elif not game.habitat.contains(self.tc):
             return False, "area not in habitat"
-        player_owns_animal = game.find_animal_owner(self.c) == self.p
+        controls = game.find_animal_owner(self.c) == self.p
         area_has_item = game.subarea_has_item(self.tc, self.it)
         area_accessible = game.subarea_accessible(self.c, self.tc)
         
@@ -239,14 +239,14 @@ class TakeItem:
         if self.it == it.GREEN:
             can_hide = game.can_hide(self.c)
 
-        if player_owns_animal and \
+        if controls and \
            area_accessible and \
            area_has_item and \
            can_eat and \
            can_hide:
             return True, 'ok'
         else:
-            return False, f'{player_owns_animal=}' + \
+            return False, f'{controls=}' + \
                    f' {area_has_item=}' + \
                    f' {area_accessible=}' + \
                    f' {can_eat=}' + \
@@ -293,4 +293,17 @@ class RunExtinction:
                     game.sdict[c].set(it.GREEN, 0)
 
 class EatAnimal:
-    pass
+    def __init__(self, args):
+        assert 'player' in args
+        assert 'card' in args
+        assert 'target_card' in args
+        self.p  = args['player']
+        self.c  = args['card']
+        self.tc = args['target_card']
+        self.tcs2 = args['ignore_cards']
+
+    def feasible(self, game):
+        controls = game.find_animal_owner(self.c) == self.p
+
+    def apply(self, game):
+        pass
