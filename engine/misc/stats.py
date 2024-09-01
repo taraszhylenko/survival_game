@@ -10,12 +10,12 @@ class Stats:
         self.stats[key] = 0
 
     def increment(self, key):
+        assert 0 <= self.stats[key] + 1 < 100
         self.stats[key] += 1
-        assert 0 <= self.stats[key] < 100
 
     def decrement(self, key):
+        assert 0 <= self.stats[key] - 1 < 100
         self.stats[key] -= 1
-        assert 0 <= self.stats[key] < 100
 
     def decrement_one_of(self, keys):
         for key in keys:

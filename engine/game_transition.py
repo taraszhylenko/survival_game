@@ -292,18 +292,43 @@ class RunExtinction:
                         game.sdict[c].decrement_one_of([it.RED, it.BLUE, it.FAT])
                     game.sdict[c].set(it.GREEN, 0)
 
-class EatAnimal:
+
+class AddItem:
     def __init__(self, args):
-        assert 'player' in args
         assert 'card' in args
-        assert 'target_card' in args
-        self.p  = args['player']
+        assert 'item_type' in args
         self.c  = args['card']
-        self.tc = args['target_card']
-        self.tcs2 = args['ignore_cards']
+        self.it = args['item_type']
 
     def feasible(self, game):
-        controls = game.find_animal_owner(self.c) == self.p
+        is_subarea = game.is_subarea(self.c)
+        green_or_red = self.it in [it.RED, it.GREEN]
+        if is_subarea and \
+           green_or_red:
+            return True, 'ok'
+        else:
+            return False, f"{is_subarea=}; {gree_or_red=}"
 
     def apply(self, game):
-        pass
+        game.sdict[self.c].increment(self.it)
+
+class RemoveItem:
+    def __init__(self, args):
+        assert 'card' in args
+        assert 'item_type' in args
+        self.c  = args['card']
+        self.it = args['item_type']
+
+    def feasible(self, game):
+        is_subarea = game.is_subarea(self.c)
+        green_or_red = self.it in [it.RED, it.GREEN]
+        if is_subarea and \
+           green_or_red:
+            return True, 'ok'
+        else:
+            return False, f"{is_subarea=}; {gree_or_red=}"
+
+    def apply(self, game):
+        game.sdict[self.c].decrement(self.it)
+
+

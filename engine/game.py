@@ -19,7 +19,9 @@ from engine.game_transition import CastAnimal, \
                                    UpdateStats, \
                                    TakeItem, \
                                    ConvertFat, \
-                                   RunExtinction
+                                   RunExtinction, \
+                                   AddItem, \
+                                   RemoveItem
 
 class Game:
     def __init__(self, evolution_deck_csv,
@@ -168,6 +170,16 @@ class Game:
                                        'card': card,
                                        'item_type': item_type,
                                        'target_card': target_card})
+
+    def add_item(self, card, item_type):
+        assert self.is_subarea(card)
+        return self.run_transition(AddItem, {'card': card,
+                                             'item_type': item_type})
+
+    def remove_item(self, card, item_type):
+        assert self.is_subarea(card)
+        return self.run_transition(RemoveItem, {'card': card,
+                                                'item_type': item_type})
 
     def run_extinction(self):
         return self.run_transition(RunExtinction, {})
