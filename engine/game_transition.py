@@ -301,15 +301,13 @@ class AddItem:
         self.it = args['item_type']
 
     def feasible(self, game):
-        is_subarea = game.is_subarea(self.c)
-        green_or_red = self.it in [it.RED, it.GREEN]
-        can_incremenet = game.sdict[self.c].can_increment(self.it)
-        if is_subarea and \
-           green_or_red and \
+        is_subarea_or_animal = game.is_subarea(self.c) or game.is_animal(self.c)
+        can_increment = game.sdict[self.c].can_increment(self.it)
+        if is_subarea_or_animal and \
            can_increment:
             return True, 'ok'
         else:
-            return False, f"{is_subarea=}; {gree_or_red=}; {can_increment=}"
+            return False, f"{is_subarea_or_animal=}; {can_increment=}"
 
     def apply(self, game):
         game.sdict[self.c].increment(self.it)
@@ -322,15 +320,13 @@ class RemoveItem:
         self.it = args['item_type']
 
     def feasible(self, game):
-        is_subarea = game.is_subarea(self.c)
-        green_or_red = self.it in [it.RED, it.GREEN]
-        can_decremenet = game.sdict[self.c].can_decrement(self.it)
-        if is_subarea and \
-           green_or_red and \
+        is_subarea_or_animal = game.is_subarea(self.c) or game.is_animal(self.c)
+        can_decrement = game.sdict[self.c].can_decrement(self.it)
+        if is_subarea_or_animal and \
            can_decrement:
             return True, 'ok'
         else:
-            return False, f"{is_subarea=}; {gree_or_red=}; {can_decrement=}"
+            return False, f"{is_subarea_or_animal=}; {can_decrement=}"
 
     def apply(self, game):
         game.sdict[self.c].decrement(self.it)

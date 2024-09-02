@@ -9,15 +9,24 @@ class Stats:
         assert len(key) <= 3
         self.stats[key] = 0
 
+    def has_key(self, key):
+        return key in self.stats
+
     def can_increment(self, key):
-        return 0 <= self.stats[key] + 1 < 100
+        if self.has_key(key):
+            return 0 <= self.stats[key] + 1 < 100
+        else:
+            return False
     
     def increment(self, key):
         assert 0 <= self.stats[key] + 1 < 100
         self.stats[key] += 1
 
     def can_decrement(self, key):
-        return 0 <= self.stats[key] - 1 < 100
+        if self.has_key(key):
+            return 0 <= self.stats[key] - 1 < 100
+        else:
+            return False
 
     def decrement(self, key):
         assert 0 <= self.stats[key] - 1 < 100
