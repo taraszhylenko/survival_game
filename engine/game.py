@@ -58,7 +58,7 @@ class Game:
         if o != -1 and idx != -1:
             return self.herds[o].get(idx)
         else:
-            return -1
+            return []
     
     def find_trait_owner(self, card):
         idx = -1

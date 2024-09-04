@@ -302,7 +302,9 @@ class AddItem:
 
     def feasible(self, game):
         is_subarea_or_animal = game.is_subarea(self.c) or game.is_animal(self.c)
-        can_increment = game.sdict[self.c].can_increment(self.it)
+        can_increment = False
+        if self.c in game.sdict:
+            can_increment = game.sdict[self.c].can_increment(self.it)
         if is_subarea_or_animal and \
            can_increment:
             return True, 'ok'
@@ -321,7 +323,9 @@ class RemoveItem:
 
     def feasible(self, game):
         is_subarea_or_animal = game.is_subarea(self.c) or game.is_animal(self.c)
-        can_decrement = game.sdict[self.c].can_decrement(self.it)
+        can_decrement = False
+        if self.c in game.sdict:
+            can_decrement = game.sdict[self.c].can_decrement(self.it)
         if is_subarea_or_animal and \
            can_decrement:
             return True, 'ok'
