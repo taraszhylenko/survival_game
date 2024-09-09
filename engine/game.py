@@ -123,7 +123,7 @@ class Game:
                                                   'card1': card1,
                                                   'card2': card2})
 
-    def draw(self, player):
+    def draw_card(self, player):
         return self.run_transition(DrawCard, {'player': player})
 
     def cast_animal(self, player, card):
