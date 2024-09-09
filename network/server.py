@@ -70,6 +70,8 @@ class GameServer:
                 print(f'[*] {sock0_ready=}, {sock1_ready=}')
                 nm0.recv()
                 nm1.recv()
+                nm0.send("repeat your turn", game.render().arr)
+                nm1.send("repeat your turn", game.render().arr)
                 print(f'[*] emptying queue as both requests arrived simultaneously')
             elif sock0_ready:
                 print(f'[*] {sock0_ready=}, {sock1_ready=}')
