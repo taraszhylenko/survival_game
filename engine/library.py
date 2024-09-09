@@ -22,8 +22,8 @@ class Library:
     def set_trait_num_targets(self):
         self.trait_num_targets = defaultdict(lambda: 1, {
                     'partnership': 2,
-                    'communication': 1,
-                    'cooperation': 1
+                    'communication': 2,
+                    'cooperation': 2
                 })
 
     def get_trait_num_targets(self, trait):
