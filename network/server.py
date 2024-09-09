@@ -56,19 +56,23 @@ class GameServer:
         game = Game(self.evolution_deck_file,
                     self.area_deck_file,
                     2)
+        nm0 = NetworkManager(sock0, self.buff_size)
+        nm1 = NetworkManager(sock1, self.buff_size)
+        nm0.send(0)
+        nm1.send(1)
         while True:
             time.sleep(0.1)
             sock0_ready = bool(select.select([sock0], [], [], 0.01)[0])
             sock1_ready = bool(select.select([sock1], [], [], 0.01)[0])
             print(f'[*] {sock0_ready=}, {sock1_ready=}')
             if sock0_ready and sock1_ready:
-                NetworkManager(sock0, buff_size).recv()
-                NetworkManager(sock1, buff_size).recv()
+                nm0.recv()
+                nm1.recv()
                 print(f'[*] emptying queue as both requests arrived simultaneously')
             elif sock0_ready:
-                NetworkManager(sock0, self.buff_size).send(self.process_player_request(game, 0, sock0))
+                nm0.send(self.process_player_request(game, 0, sock0))
             elif sock1_ready:
-                NetworkManager(sock1, self.buff_size).send(self.process_player_request(game, 1, sock1))
+                nm1.send(self.process_player_request(game, 1, sock1))
 
     def process_player_request(self, game, player, sock):
         player_request = NetworkManager(sock, self.buff_size).recv()
@@ -82,8 +86,8 @@ class GameServer:
                           f"^place_area\({player}\)$",
                           f"^remove_area\({player}\)$",
                           f"^take_item\({player},\d+,(tt.RED|tt.GREEN),\d+\)$",
-                          f"^add_item\({player},\d+,(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
-                          f"^remove_item\({player},\d+,(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
+                          f"^add_item\({player},(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
+                          f"^remove_item\({player},(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
                           f"^run_extinction\({player}\)$"]
         if not any([bool(re.compile(el).match(player_request)) for el in valid_requests]):
             print(f'[*] got invalid request {player_request}')
