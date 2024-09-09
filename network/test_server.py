@@ -62,8 +62,8 @@ class GameServer:
             sock1_ready = bool(select.select([sock1], [], [], 0.01)[0])
             print(f'[*] {sock0_ready=}, {sock1_ready=}')
             if sock0_ready and sock1_ready:
-                NetworkManager(sock0).recv()
-                NetworkManager(sock1).recv()
+                NetworkManager(sock0, buff_size).recv()
+                NetworkManager(sock1, buff_size).recv()
                 print(f'[*] emptying queue as both requests arrived simultaneously')
             elif sock0_ready:
                 NetworkManager(sock0, self.buff_size).send(self.process_player_request(game, 0, sock0))
@@ -72,7 +72,7 @@ class GameServer:
 
     def process_player_request(self, game, player, sock):
         player_request = NetworkManager(sock, self.buff_size).recv()
-        valid_requests = [f"^render\({player}\)$",
+        valid_requests = [f"^noop\({player}\)$",
                           f"^rules\({player}\)$",
                           f"^draw_card\({player}\)$",
                           f"^cast_animal\({player},\d+\)$",
@@ -87,10 +87,10 @@ class GameServer:
                           f"^run_extinction\({player}\)$"]
         if not any([bool(re.compile(el).match(player_request)) for el in valid_requests]):
             print(f'[*] got invalid request {player_request}')
-            return ("invalid_format", game.render().arr)
+            return ("invalid_format", game.render(player).arr)
         status = eval(f'game.{player_request}')
         print(f'[*] request {player_request} from {player}: {status}')
-        return status, game.render().arr
+        return status, game.render(player).arr
 
 
 if __name__ == '__main__':
