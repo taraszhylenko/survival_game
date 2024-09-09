@@ -18,7 +18,10 @@ class GameClient:
         player_id = nm.recv()
         print(f'Entered as player {player_id}. Include it in all your commands')
         while True:
-            command = input("enter command:")
+            command = input(f"player {player_id}, enter your command:")
+            print("--------------------------------------------------------------------")
+            print("---NEW TURN---------------------------------------------------------")
+            print("--------------------------------------------------------------------")
             nm.send(command)
             status, render = nm.recv()
             Render(render).print()
