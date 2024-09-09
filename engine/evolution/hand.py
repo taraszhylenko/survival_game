@@ -22,5 +22,8 @@ class Hand:
         assert idx != -1, f"player doesn't have {card} in hand"
         self.cards.pop(idx)
 
-    def render(self, card_dict):
-        return Render.merge_row([card_dict[c].render_front(True) for c in self.cards])
+    def render(self, card_dict, visible):
+        if visible:
+            return Render.merge_row([card_dict[c].render_front(True) for c in self.cards])
+        else:
+            return Render.merge_row([card_dict[c].render_back(False) for c in self.cards])

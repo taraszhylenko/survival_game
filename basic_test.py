@@ -27,9 +27,9 @@ class Testing(unittest.TestCase):
         t5  = gg.render().arr
         t6  = gg.cast_animal(1, 18)
         t7  = gg.cast_trait(1, 87, tt.MAIN, [18])
-        t8  = gg.place_area()
+        t8  = gg.place_area(0)
         t9  = gg.render().arr
-        t10 = gg.place_area()
+        t10 = gg.place_area(0)
         t11 = gg.render().arr
         t12 = gg.cast_trait(0, 50, tt.SHORT, [60])
         t12 = gg.swap_animals(0, 14, 50)
@@ -42,24 +42,24 @@ class Testing(unittest.TestCase):
         t19 = gg.take_item(1, 18, it.RED, 216)
         t20 = gg.take_item(1, 18, it.RED, 216)
         t21 = gg.render().arr
-        t22 = gg.run_extinction()
+        t22 = gg.run_extinction(1)
         t23 = gg.render().arr
-        t24 = gg.run_extinction()
+        t24 = gg.run_extinction(1)
         t25 = gg.render().arr
-        t26 = gg.place_area()
+        t26 = gg.place_area(1)
         t27 = gg.render().arr
-        t28 = gg.remove_item(218, it.GREEN)
-        t29 = gg.remove_item(218, it.FAT)
-        t30 = gg.remove_item(218, it.RED)
-        t31 = gg.remove_item(218, it.RED)
-        t32 = gg.add_item(220, it.RED)
-        t33 = gg.add_item(220, it.GREEN)
-        t34 = gg.add_item(220, it.FAT)
-        t35 = gg.add_item(17,  it.FAT)
-        t36 = gg.add_item(18,  it.FAT)
-        t37 = gg.add_item(18,  it.GREEN)
-        t38 = gg.add_item(18,  it.BLUE)
-        t39 = gg.remove_item(18,  it.RED)
+        t28 = gg.remove_item(0, 218, it.GREEN)
+        t29 = gg.remove_item(1, 218, it.FAT)
+        t30 = gg.remove_item(0, 218, it.RED)
+        t31 = gg.remove_item(1, 218, it.RED)
+        t32 = gg.add_item(0, 220, it.RED)
+        t33 = gg.add_item(1, 220, it.GREEN)
+        t34 = gg.add_item(0, 220, it.FAT)
+        t35 = gg.add_item(1, 17,  it.FAT)
+        t36 = gg.add_item(0, 18,  it.FAT)
+        t37 = gg.add_item(1, 18,  it.GREEN)
+        t38 = gg.add_item(0, 18,  it.BLUE)
+        t39 = gg.remove_item(1, 18,  it.RED)
         t40 = gg.render().arr
         self.assertTrue(t1 == t3 == t6 == t7 == t8 == t10 == t13 == t15 == t17 == t19 == t22 == t24 == \
                         t30 == t31 == t32 == t33 == t36 == t37 == t38 == 'ok')
@@ -166,11 +166,11 @@ class Testing(unittest.TestCase):
         hh.add(cc[3])
         hh.add(cc[4])
         hh.add(cc[5])
-        t1 = hh.render(evolution_dict).arr
+        t1 = hh.render(evolution_dict, True).arr
         hh.discard(cc[4])
         hh.discard(cc[2])
         hh.discard(cc[0])
-        t2 = hh.render(evolution_dict).arr
+        t2 = hh.render(evolution_dict, True).arr
         e1 = pd.read_csv('asset/test/9/1.csv').to_numpy()
         e2 = pd.read_csv('asset/test/9/2.csv').to_numpy()
         self.assertTrue((t1 == e1).all())

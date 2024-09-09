@@ -2,17 +2,22 @@ import argparse
 import datetime
 import os
 import re
+import select
 import socket
 import threading
+import time
 
-from manager import NetworkManager
+from network.manager import NetworkManager
+from engine.game import Game
 
 class GameServer:
-    def __init__(self, ip, port, buff_size, tag):
+    def __init__(self, ip, port, buff_size, tag, evolution_deck_file, area_deck_file):
         self.ip = ip
         self.port = port
         self.buff_size = buff_size
         self.tag = tag
+        self.evolution_deck_file = evolution_deck_file
+        self.area_deck_file = area_deck_file
 
     def run_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -37,19 +42,56 @@ class GameServer:
                 f"{game_tag} doesn't match expectation {today_str}.*{self.tag}"
             if game_tag in self.connections:
                 print(f'[*] creating game with two players')
-                sock_old = self.connections.pop(game_tag)
+                with self.lock:
+                    sock_old = self.connections.pop(game_tag)
                 self.handle_game(sock_old, sock)
             else:
                 print(f'[*] adding first player to game {game_tag}')
-                self.connections[game_tag] = sock
+                with self.lock:
+                    self.connections[game_tag] = sock
         except Exception as e:
             print(e)
 
     def handle_game(self, sock0, sock1):
-        nm0 = NetworkManager(sock0, self.buff_size)
-        nm1 = NetworkManager(sock1, self.buff_size)
-        nm0.send("Connected as player 0")
-        nm1.send("Connected as player 1")
+        game = Game(self.evolution_deck_file,
+                    self.area_deck_file,
+                    2)
+        while True:
+            time.sleep(0.1)
+            sock0_ready = bool(select.select([sock0], [], [], 0.01)[0])
+            sock1_ready = bool(select.select([sock1], [], [], 0.01)[0])
+            print(f'[*] {sock0_ready=}, {sock1_ready=}')
+            if sock0_ready and sock1_ready:
+                NetworkManager(sock0).recv()
+                NetworkManager(sock1).recv()
+                print(f'[*] emptying queue as both requests arrived simultaneously')
+            elif sock0_ready:
+                NetworkManager(sock0, self.buff_size).send(self.process_player_request(game, 0, sock0))
+            elif sock1_ready:
+                NetworkManager(sock1, self.buff_size).send(self.process_player_request(game, 1, sock1))
+
+    def process_player_request(self, game, player, sock):
+        player_request = NetworkManager(sock, self.buff_size).recv()
+        valid_requests = [f"^render\({player}\)$",
+                          f"^rules\({player}\)$",
+                          f"^draw_card\({player}\)$",
+                          f"^cast_animal\({player},\d+\)$",
+                          f"(^cast_trait\({player},\d+,(tt.MAIN|tt.SHORT),\[\d+\]\)$|^cast_trait\({player},\d+,(tt.MAIN|tt.SHORT),\[\d+,\d+\]\)$)",
+                          f"^discard_animal\({player},\d+\)$",
+                          f"^discard_trait\({player},\d+\)$",
+                          f"^place_area\({player}\)$",
+                          f"^remove_area\({player}\)$",
+                          f"^take_item\({player},\d+,(tt.RED|tt.GREEN),\d+\)$",
+                          f"^add_item\({player},\d+,(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
+                          f"^remove_item\({player},\d+,(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
+                          f"^run_extinction\({player}\)$"]
+        if not any([bool(re.compile(el).match(player_request)) for el in valid_requests]):
+            print(f'[*] got invalid request {player_request}')
+            return ("invalid_format", game.render().arr)
+        status = eval(f'game.{player_request}')
+        print(f'[*] request {player_request} from {player}: {status}')
+        return status, game.render().arr
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -57,7 +99,10 @@ if __name__ == '__main__':
     parser.add_argument('--port',      type=int, required=True)
     parser.add_argument('--buff_size', type=int, required=True)
     parser.add_argument('--tag',       type=str, required=True)
+    parser.add_argument('--evolution-deck-file', type=str, required=True)
+    parser.add_argument('--area-deck-file',      type=str, required=True)
 
     args = parser.parse_args()
 
-    GameServer(args.ip, args.port, args.buff_size, args.tag).run_server()
+    GameServer(args.ip, args.port, args.buff_size, args.tag,
+               args.evolution_deck_file, args.area_deck_file).run_server()

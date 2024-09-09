@@ -153,10 +153,10 @@ class Game:
         else:
             return f'Transition infeasible: {reason}'
 
-    def place_area(self):
+    def place_area(self, player):
         return self.run_transition(PlaceArea, {})
 
-    def remove_area(self):
+    def remove_area(self, player):
         return self.run_transition(RemoveArea, {})
 
     def update_stats(self):
@@ -171,21 +171,21 @@ class Game:
                                        'item_type': item_type,
                                        'target_card': target_card})
 
-    def add_item(self, card, item_type):
+    def add_item(self, player, card, item_type):
         return self.run_transition(AddItem, {'card': card,
                                              'item_type': item_type})
 
-    def remove_item(self, card, item_type):
+    def remove_item(self, player, card, item_type):
         return self.run_transition(RemoveItem, {'card': card,
                                                 'item_type': item_type})
 
-    def run_extinction(self):
+    def run_extinction(self, player):
         return self.run_transition(RunExtinction, {})
 
-    def render(self):
+    def render(self, player=-1):
         self.update_stats()
         self.convert_fat()
-        players = Render.merge_column([Render.merge_column([self.hands[i].render(self.edict).add_title_above(f'vvv Player {i} vvv'),
+        players = Render.merge_column([Render.merge_column([self.hands[i].render(self.edict, player == -1 or player == i).add_title_above(f'vvv Player {i} vvv'),
                                                             self.herds[i].render(self.edict),
                                                             self.herds[i].render_stats(self.sdict, self.eh, self.el)]) for i in range(self.num_players)])
         
