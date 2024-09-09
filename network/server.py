@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import os
+import random
 import re
 import select
 import socket
@@ -9,6 +10,7 @@ import time
 
 from network.manager import NetworkManager
 from engine.game import Game
+from engine.enum import TraitType as tt, ItemType as it
 
 class GameServer:
     def __init__(self, ip, port, buff_size, tag, evolution_deck_file, area_deck_file):
@@ -64,14 +66,16 @@ class GameServer:
             time.sleep(0.1)
             sock0_ready = bool(select.select([sock0], [], [], 0.01)[0])
             sock1_ready = bool(select.select([sock1], [], [], 0.01)[0])
-            print(f'[*] {sock0_ready=}, {sock1_ready=}')
             if sock0_ready and sock1_ready:
+                print(f'[*] {sock0_ready=}, {sock1_ready=}')
                 nm0.recv()
                 nm1.recv()
                 print(f'[*] emptying queue as both requests arrived simultaneously')
             elif sock0_ready:
+                print(f'[*] {sock0_ready=}, {sock1_ready=}')
                 nm0.send(self.process_player_request(game, 0, sock0))
             elif sock1_ready:
+                print(f'[*] {sock0_ready=}, {sock1_ready=}')
                 nm1.send(self.process_player_request(game, 1, sock1))
 
     def process_player_request(self, game, player, sock):
@@ -85,11 +89,14 @@ class GameServer:
                           f"^discard_trait\({player},\d+\)$",
                           f"^place_area\({player}\)$",
                           f"^remove_area\({player}\)$",
-                          f"^take_item\({player},\d+,(tt.RED|tt.GREEN),\d+\)$",
-                          f"^add_item\({player},(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
-                          f"^remove_item\({player},(tt.RED|tt.GREEN|tt.BLUE|tt.FAT)\)$",
+                          f"^take_item\({player},\d+,(it.RED|it.GREEN),\d+\)$",
+                          f"^add_item\({player},\d+,(it.RED|it.GREEN|it.BLUE|it.FAT)\)$",
+                          f"^remove_item\({player},\d+,(it.RED|it.GREEN|it.BLUE|it.FAT)\)$",
+                          f"^roll_die\({player}\)$",
                           f"^run_extinction\({player}\)$"]
         if not any([bool(re.compile(el).match(player_request)) for el in valid_requests]):
+            if player_request == "":
+                return "ok", game.render(player).arr
             print(f'[*] got invalid request {player_request}')
             return ("invalid_format", game.render(player).arr)
         status = eval(f'game.{player_request}')

@@ -11,6 +11,7 @@ from engine.render import Render
 from engine.game_transition import CastAnimal, \
                                    CastTrait, \
                                    DiscardTrait, \
+                                   DiscardCard, \
                                    DiscardAnimal, \
                                    SwapAnimals, \
                                    DrawCard, \
@@ -22,7 +23,8 @@ from engine.game_transition import CastAnimal, \
                                    RunExtinction, \
                                    AddItem, \
                                    RemoveItem, \
-                                   Noop
+                                   Noop, \
+                                   RollDie
 
 class Game:
     def __init__(self, evolution_deck_csv,
@@ -145,6 +147,10 @@ class Game:
         return self.run_transition(DiscardTrait, {'player': player,
                                            'card': card})
 
+    def discard_card(self, player, card):
+        return self.run_transition(DiscardCard, {'player': player,
+                                                 'card': card})
+
     def run_transition(self, transition_type, args):
         transition = transition_type(args)
         feasible, reason = transition.feasible(self)
@@ -185,6 +191,9 @@ class Game:
 
     def noop(self, player):
         return self.run_transition(Noop, {})
+
+    def roll_die(self, player):
+        return self.run_transition(RollDie, {})
 
     def render(self, player=-1):
         self.update_stats()

@@ -64,6 +64,25 @@ class CastTrait:
             tp = game.find_animal_owner(tc)
             game.herds[tp].cast_trait(self.c, self.tt, tc)
 
+class DiscardCard:
+    def __init__(self, args):
+        assert 'player' in args
+        assert 'card' in args
+        self.p = args['player']
+        self.c = args['card']
+
+    def feasible(self, game):
+        controls = self.c in self.hands[self.p]
+        if controls:
+            return True, 'ok'
+        else:
+            return False, f"{controls=}"
+
+    def apply(self, game):
+        self.hands[self.p] = [el for el in self.hands[self.p] if el != self.c]
+        game.edisc.add(self.c)
+
+
 class DiscardTrait:
     def __init__(self, args):
         assert 'player' in args
@@ -234,7 +253,7 @@ class TakeItem:
         can_eat = True
         if self.it in [it.RED, it.BLUE]:
             can_eat = game.can_eat(self.c)
-
+        
         can_hide = True
         if self.it == it.GREEN:
             can_hide = game.can_hide(self.c)
@@ -335,6 +354,15 @@ class RemoveItem:
     def apply(self, game):
         game.sdict[self.c].decrement(self.it)
 
+class RollDie:
+    def __init__(self, args):
+        assert True
+
+    def feasible(self, game):
+        return True, 'ok'
+
+    def apply(self, game):
+        game.die.roll()
 
 class Noop:
     def __init__(self, args):

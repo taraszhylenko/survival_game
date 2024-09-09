@@ -1,8 +1,5 @@
 import argparse
-import datetime
-import os
-import re
-import select
+import readline
 import socket
 import threading
 import time
@@ -13,6 +10,7 @@ from engine.render import Render
 
 class GameClient:
     def __init__(self, ip, port, buff_size, tag):
+        readline.set_auto_history(True)
         sock = socket.socket()
         sock.connect((str(ip), int(port)))
         nm = NetworkManager(sock, buff_size)
