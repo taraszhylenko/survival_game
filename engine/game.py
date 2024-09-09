@@ -21,7 +21,8 @@ from engine.game_transition import CastAnimal, \
                                    ConvertFat, \
                                    RunExtinction, \
                                    AddItem, \
-                                   RemoveItem
+                                   RemoveItem, \
+                                   Noop
 
 class Game:
     def __init__(self, evolution_deck_csv,
@@ -181,6 +182,9 @@ class Game:
 
     def run_extinction(self, player):
         return self.run_transition(RunExtinction, {})
+
+    def noop(self, player):
+        return self.run_transition(Noop, {})
 
     def render(self, player=-1):
         self.update_stats()

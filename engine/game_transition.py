@@ -336,3 +336,12 @@ class RemoveItem:
         game.sdict[self.c].decrement(self.it)
 
 
+class Noop:
+    def __init__(self, args):
+        assert True
+
+    def feasible(self, game):
+        return True, 'ok'
+
+    def apply(self, game):
+        return
