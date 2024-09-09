@@ -87,6 +87,7 @@ class GameServer:
                           f"(^cast_trait\({player},\d+,(tt.MAIN|tt.SHORT),\[\d+\]\)$|^cast_trait\({player},\d+,(tt.MAIN|tt.SHORT),\[\d+,\d+\]\)$)",
                           f"^discard_animal\({player},\d+\)$",
                           f"^discard_trait\({player},\d+\)$",
+                          f"^discard_card\({player},\d+\)$",
                           f"^place_area\({player}\)$",
                           f"^remove_area\({player}\)$",
                           f"^take_item\({player},\d+,(it.RED|it.GREEN),\d+\)$",

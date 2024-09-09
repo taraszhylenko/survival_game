@@ -1,5 +1,5 @@
 name1,effect1,red1,green1,name2,effect2,red2,green2,quantity,back_txt1,front_txt1,back_txt2,front_txt2
-mangrove_forest,,2,1,,,,,2,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt,,
+mangrove_forests,,2,1,,,,,2,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt,,
 glaciers,without_traits,1,0,tundra,,1,0,2,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt
 lakes,swimming,2,0,reed_beds,,2,0,2,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt
 savannahs,high_body_weight,2,0,deserts,,1,0,2,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt,asset/card/area/back/daffodil1.txt,asset/card/area/back/star1.txt

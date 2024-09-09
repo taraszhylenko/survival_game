@@ -72,14 +72,14 @@ class DiscardCard:
         self.c = args['card']
 
     def feasible(self, game):
-        controls = self.c in self.hands[self.p]
+        controls = game.hands[self.p].contains(self.c)
         if controls:
             return True, 'ok'
         else:
             return False, f"{controls=}"
 
     def apply(self, game):
-        self.hands[self.p] = [el for el in self.hands[self.p] if el != self.c]
+        game.hands[self.p].discard(self.c)
         game.edisc.add(self.c)
 
 

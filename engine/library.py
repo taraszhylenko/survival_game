@@ -66,7 +66,7 @@ class Library:
             return 'nocturnal' in traits_txt
         elif area == 'glaciers':
             return len(traits_txt) == 0
-        elif area == 'savannah':
+        elif area == 'savannahs':
             return 'high_body_weight' in traits_txt
         elif area == 'lakes':
             return 'swimming' in traits_txt
